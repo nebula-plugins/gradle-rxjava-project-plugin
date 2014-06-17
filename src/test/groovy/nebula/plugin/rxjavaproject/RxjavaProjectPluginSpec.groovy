@@ -22,4 +22,5 @@ class RxjavaProjectPluginSpec extends ProjectSpec {
     void getPluginName() {
         'rxjava-project'
     }
+
 }

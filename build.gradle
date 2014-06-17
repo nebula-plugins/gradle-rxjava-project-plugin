@@ -14,5 +14,7 @@ contacts {
 }
 
 dependencies {
+    compile 'com.netflix.nebula:nebula-project-plugin:1.12.+'
+    compile('com.github.jengelman.gradle.plugins:shadow:0.9.0-M3')
     testCompile 'com.netflix.nebula:nebula-test:1.12.+'
 }
