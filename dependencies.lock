@@ -1,0 +1,5 @@
+{
+  "com.github.jengelman.gradle.plugins:shadow": { "locked": "1.0.1", "requested": "1.+" },
+  "com.netflix.nebula:nebula-project-plugin": { "locked": "1.12.7", "requested": "1.12.+" },
+  "com.netflix.nebula:nebula-test": { "locked": "1.12.0", "requested": "1.12.+" }
+}
