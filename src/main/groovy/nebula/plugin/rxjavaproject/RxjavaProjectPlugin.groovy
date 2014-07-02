@@ -111,6 +111,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
         project.tasks.withType(Test) { Test testTask ->
             testTask.testLogging.exceptionFormat = 'full'
+            testTask.testLogging.events "started"
+            testTask.testLogging.displayGranularity = 2
         }
     }
 }

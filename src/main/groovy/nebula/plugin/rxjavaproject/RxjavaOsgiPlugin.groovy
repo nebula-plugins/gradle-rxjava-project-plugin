@@ -23,6 +23,8 @@ class RxjavaOsgiPlugin implements Plugin<Project> {
                 instruction 'Bundle-DocURL', 'https://github.com/Netflix/RxJava'
                 instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
                 instruction 'Eclipse-ExtensibleAPI', 'true'
+                // Sometimes this is added:
+                //instruction 'Fragment-Host', 'com.netflix.rxjava.core'
             }
         }
     }
