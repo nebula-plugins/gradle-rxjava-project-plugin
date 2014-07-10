@@ -16,14 +16,21 @@
 package nebula.plugin.rxjavaproject
 
 import nebula.test.IntegrationSpec
+import spock.lang.Ignore
+
+import java.util.jar.Attributes
+import java.util.jar.JarFile
 
 class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
 
+
     def setup() {
+        useToolingApi = false
         writeHelloWorld('reactivex')
         createFile('src/examples/java/Example.java') << 'public class Example {}'
         createFile('src/perf/java/Perf.java') << 'public class Perf {}'
 
+        createFile('gradle.properties') << 'version=1.0.0-SNAPSHOT'
         buildFile << """
             ${applyPlugin(RxjavaProjectPlugin)}
             apply plugin: 'java'
@@ -35,16 +42,37 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         def result = runTasksSuccessfully('build')
 
         then:
-        fileExists('build/classes/examples/Example.class')
-        fileExists('build/classes/perf/Perf.class')
         fileExists('build/classes/main/reactivex/HelloWorld.class')
+        fileExists('build/libs/stand-it-all-up-1.0.0-SNAPSHOT-javadoc.jar')
+        fileExists('build/libs/stand-it-all-up-1.0.0-SNAPSHOT-sources.jar')
+        fileExists('build/libs/stand-it-all-up-1.0.0-SNAPSHOT-tests.jar')
+        fileExists('build/libs/stand-it-all-up-1.0.0-SNAPSHOT.jar')
+
+        def manifest = getManifest('build/libs/stand-it-all-up-1.0.0-SNAPSHOT.jar')
+        manifest['Module-Email'] == 'benjchristensen@netflix.com'
+
+        result.wasExecuted(':compileExamplesJava')
+        fileExists('build/classes/examples/Example.class')
+
+        result.wasExecuted(':compilePerfJava')
+        fileExists('build/classes/perf/Perf.class')
+        fileExists('build/libs/stand-it-all-up-1.0.0-SNAPSHOT-benchmarks.jar')
+
+        result.wasExecuted(':javadoc')
         fileExists('build/docs/javadoc/index.html')
-        new File(projectDir, 'build/docs/javadoc/index.html').text.contains('<title>RxJava Javadoc unspecified</title>')
-        fileExists('build/libs/stand-it-all-up-javadoc.jar')
-        fileExists('build/libs/stand-it-all-up-sources.jar')
-        fileExists('build/libs/stand-it-all-up-tests.jar')
-        fileExists('build/libs/stand-it-all-up-benchmarks.jar')
-        fileExists('build/libs/stand-it-all-up.jar')
+        new File(projectDir, 'build/docs/javadoc/index.html').text.contains('<title>RxJava Javadoc 1.0.0-SNAPSHOT</title>')
+        def jmhManifest = getManifest('build/libs/stand-it-all-up-1.0.0-SNAPSHOT-benchmarks.jar')
+        jmhManifest['Main-Class'] == 'org.openjdk.jmh.Main'
     }
 
+    @Ignore
+    def Map<String,String> getManifest(String jarPath) {
+        def jmhJar = new JarFile(new File(projectDir, jarPath))
+        Attributes attrs = jmhJar.manifest.mainAttributes
+        attrs.keySet().collectEntries { Object key ->
+            return [key.toString(), attrs.getValue(key)]
+        }
+
+
+    }
 }

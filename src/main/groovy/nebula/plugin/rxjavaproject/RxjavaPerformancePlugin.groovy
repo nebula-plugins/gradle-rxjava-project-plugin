@@ -10,6 +10,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.tasks.JavaExec
 
 /**
  * Establish JMH
@@ -19,9 +20,14 @@ class RxjavaPerformancePlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         // Facets
-        project.plugins.apply(JavaBasePlugin)
+        project.plugins.apply(JavaPlugin)
         def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
         facetPlugin.extension.create('perf')
+
+        project.dependencies {
+            perfCompile 'org.openjdk.jmh:jmh-core:0.9'
+            perfCompile 'org.openjdk.jmh:jmh-generator-annprocess:0.9'
+        }
 
         project.plugins.apply(ShadowPlugin) // Applies JavaPlugin :-(
 
@@ -35,8 +41,10 @@ class RxjavaPerformancePlugin implements Plugin<Project> {
             shadowJar.from(convention.sourceSets.perf.output)
             shadowJar.from(project.configurations.perfRuntime)
             shadowJar.classifier = 'benchmarks'
-            shadowJar.manifest {
-                attributes("Main-Class": "org.openjdk.jmh.Main")
+
+            // Not using applyManifest since it'll inherit the BND/OSGI cruft
+            shadowJar.doFirst {
+                shadowJar.manifest.attributes.put("Main-Class", "org.openjdk.jmh.Main")
             }
 
             project.configurations {
@@ -48,5 +56,44 @@ class RxjavaPerformancePlugin implements Plugin<Project> {
             CustomComponentPlugin.addArtifact(project, 'shadow', shadowJar, 'jar', project.configurations.perfRuntime)
         }
 
+        /**
+         * By default: Run without arguments this will execute all benchmarks that are found (can take a long time).
+         *
+         * Optionally pass arguments for custom execution. Example:
+         *
+         *  ../gradlew benchmarks '-Pjmh=-f 1 -tu ns -bm avgt -wi 5 -i 5 -r 1 .*OperatorSerializePerf.*'
+         *
+         * To see all options:
+         *
+         *  ../gradlew benchmarks '-Pjmh=-h'
+         */
+        project.task(type: JavaExec, 'benchmarks') {
+            main = 'org.openjdk.jmh.Main'
+            classpath = project.sourceSets.perf.runtimeClasspath
+            maxHeapSize = "512m"
+            jvmArgs '-XX:+UnlockCommercialFeatures'
+            jvmArgs '-XX:+FlightRecorder'
+
+            if (project.hasProperty('jmh')) {
+                args(jmh.split(' '))
+            } else {
+                //args '-h' // help output
+                args '-f' // fork
+                args '1'
+                args '-wi' // warmup iterations
+                args '5'
+                args '-i' // test iterations
+                args '5'
+                args '-r' // time per execution in seconds
+                args '5'
+                //args '-prof' // profilers
+                //args 'HS_GC' // HotSpot (tm) memory manager (GC) profiling via implementation-specific MBeans
+                //args 'HS_RT' // HotSpot (tm) runtime profiling via implementation-specific MBeans
+                //args 'HS_THR' // HotSpot (tm) threading subsystem via implementation-specific MBeans
+                //args 'HS_COMP' // HotSpot (tm) JIT compiler profiling via implementation-specific MBeans
+                //args 'HS_CL' // HotSpot (tm) classloader profiling via implementation-specific MBeans
+                //args 'STACK' // Simple and naive Java stack profiler
+            }
+        }
     }
 }

@@ -60,7 +60,13 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         project.plugins.apply(InfoPlugin)
 
         // Contacts
-        project.plugins.apply(ContactsPlugin)
+        ContactsPlugin contactsPlugin = project.plugins.apply(ContactsPlugin)
+        project.contacts {
+            'benjchristensen@netflix.com' {
+                github 'benjchristensen'
+                moniker 'Ben Christensen'
+            }
+        }
 
         // Dependency Locking
         project.plugins.apply(DependencyLockPlugin)
@@ -71,11 +77,13 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
         // Facets
         def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
-        facetPlugin.extension.create('examples')
+        facetPlugin.extension.create('examples')  {
+            parentSourceSet = 'main'
+        }
 
         // Default Group
         def gradleHelper = new GradleHelper(project)
-        gradleHelper.addDefaultGroup('com.netflix.rxjava')
+        gradleHelper.addDefaultGroup('com.netflix.rxjava') // TODO This will have to change to reactivex
 
         // ReactiveX specific plugins
         project.plugins.apply RxjavaPerformancePlugin

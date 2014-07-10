@@ -15,6 +15,12 @@ contacts {
 
 dependencies {
     compile 'com.netflix.nebula:nebula-project-plugin:1.12.+'
-    compile('com.github.jengelman.gradle.plugins:shadow:1.+')
+    compile 'com.github.jengelman.gradle.plugins:shadow:1.+'
+    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0'
+    compile 'com.google.guava:guava:17.0' // For ClasspathHelper
     testCompile 'com.netflix.nebula:nebula-test:1.12.+'
+}
+
+task show << {
+    buildscript.configurations.classpath.each { println it }
 }

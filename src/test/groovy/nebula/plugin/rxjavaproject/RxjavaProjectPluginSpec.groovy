@@ -15,11 +15,11 @@
  */
 package nebula.plugin.rxjavaproject
 
-import nebula.test.ProjectSpec
+import nebula.test.PluginProjectSpec
 
-class RxjavaProjectPluginSpec extends ProjectSpec {
+class RxjavaProjectPluginSpec extends PluginProjectSpec {
     @Override
-    void getPluginName() {
+    String getPluginName() {
         'rxjava-project'
     }
 
