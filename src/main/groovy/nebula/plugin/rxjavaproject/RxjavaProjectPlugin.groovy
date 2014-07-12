@@ -113,6 +113,10 @@ class RxjavaProjectPlugin implements Plugin<Project> {
                 // TODO See why this was initially added.
                 // it.classpath = sourceSets.main.compileClasspath
                 windowTitle = "RxJava Javadoc ${project.version}"
+
+                if (JavaVersion.current().isJava8Compatible()) {
+                    options.addStringOption('Xdoclint:none', '-quiet')
+                }
             }
             options.addStringOption('top').value = '<h2 class="title" style="padding-top:40px">RxJava</h2>'
         }
