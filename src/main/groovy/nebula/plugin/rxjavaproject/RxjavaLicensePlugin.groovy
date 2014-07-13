@@ -6,7 +6,6 @@ import nl.javadude.gradle.plugins.license.LicenseExtension
 import nl.javadude.gradle.plugins.license.LicensePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.internal.IConventionAware
 
 /**
  * Leverage license plugin to show missing headers, and inject license into the POM

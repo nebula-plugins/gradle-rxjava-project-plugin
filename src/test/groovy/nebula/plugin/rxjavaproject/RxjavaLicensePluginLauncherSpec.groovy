@@ -35,4 +35,34 @@ class RxjavaLicensePluginLauncherSpec extends IntegrationSpec {
         !results.wasUpToDate(':writeLicenseHeader')
         !new File(projectDir, 'build/license/HEADER').exists()
     }
+
+    def 'find missing licenses'() {
+        writeHelloWorld("nebula")
+        buildFile << """
+            apply plugin: 'java'
+            ${applyPlugin(RxjavaLicensePlugin)}
+        """.stripIndent()
+
+        when:
+        def results = runTasksWithFailure('licenseMain')
+
+        then:
+        results.standardError.contains("License violations were found")
+    }
+
+    def 'fix license header'() {
+        File f = writeHelloWorld("nebula")
+        buildFile << """
+            apply plugin: 'java'
+            ${applyPlugin(RxjavaLicensePlugin)}
+        """.stripIndent()
+
+        when:
+        runTasksSuccessfully('licenseFormatMain')
+        runTasksSuccessfully('licenseMain')
+
+        then:
+        f.text.contains("Copyright")
+    }
+
 }
