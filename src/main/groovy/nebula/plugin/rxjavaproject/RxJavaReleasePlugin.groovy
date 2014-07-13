@@ -58,8 +58,12 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
                 if (grgit.branch.current.name == 'master') {
                     "SNAPSHOT"
                 } else {
-                    // Feature branches, but that could be a problem too
-                    "${grgit.branch.current.name}.${FORMAT.format(new Date())}-SNAPSHOT"// grgit.head().abbreviatedId
+                    // Feature branches
+                    def branchPath = grgit.branch.current.name
+                    def branchName = branchPath.substring(branchPath.indexOf('/')+1)
+                    "${branchName}-SNAPSHOT" // grgit.head().abbreviatedId
+//                    def current = FORMAT.format(new Date())
+//                    "${branchName}.${current}-SNAPSHOT"
                 }
             }
         }

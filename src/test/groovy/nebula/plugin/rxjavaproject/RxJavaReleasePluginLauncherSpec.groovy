@@ -5,6 +5,9 @@ import nebula.plugin.publishing.maven.NebulaMavenPublishingPlugin
 import nebula.test.IntegrationSpec
 import org.ajoberstar.grgit.Grgit
 import org.ajoberstar.grgit.Tag
+import org.ajoberstar.grgit.operation.BranchAddOp
+import org.ajoberstar.grgit.operation.BranchChangeOp
+import org.eclipse.jgit.api.CreateBranchCommand
 import org.eclipse.jgit.lib.StoredConfig
 import org.gradle.api.plugins.JavaPlugin
 import spock.lang.Ignore
@@ -134,9 +137,8 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         when:
         writeHelloWorld('test')
 
-//        grgit.branch.add(name: 'feature/myfeature')
-        grgit.checkout(branch: 'feature/myfeature', createBranch: true, startPoint: 'master')
-        //grgit.branch.change(name: 'feature/myfeature', startPoint: 'master')
+        grgit.branch.add(name: 'feature/myfeature', startPoint: 'master', mode: BranchAddOp.Mode.TRACK)
+        grgit.checkout(branch: 'feature/myfeature')
 
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
@@ -144,7 +146,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         def result = runTasksSuccessfully('snapshot', 'printVersion')
 
         then:
-        result.standardOutput.contains("Version is v0.0.1-dev.3-SNAPSHOT")
+        result.standardOutput =~ /0\.0\.1-dev\.3\+myfeature-SNAPSHOT/ // Not a fan of this, I want to remove "dev.3+"
     }
 
     // TODO Test failure cases.
