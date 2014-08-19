@@ -75,12 +75,6 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         project.plugins.apply EclipsePlugin
         project.plugins.apply IdeaPlugin
 
-        // Facets
-        def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
-        facetPlugin.extension.create('examples')  {
-            parentSourceSet = 'main'
-        }
-
         // Default Group
         def gradleHelper = new GradleHelper(project)
         gradleHelper.addDefaultGroup('com.netflix.rxjava') // TODO This will have to change to reactivex
@@ -91,6 +85,12 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
         // Set Default java versions
         project.plugins.withType(JavaPlugin) { JavaPlugin javaPlugin ->
+            // Facets
+            def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
+            facetPlugin.extension.create('examples') {
+                parentSourceSet = 'main'
+            }
+
             JavaPluginConvention convention = project.convention.getPlugin(JavaPluginConvention)
             convention.sourceCompatibility = JavaVersion.VERSION_1_6
             convention.targetCompatibility = JavaVersion.VERSION_1_6

@@ -6,8 +6,6 @@ buildscript {
 description 'Template for RxJava projects'
 apply plugin: 'nebula-plugin'
 
-//repositories { maven { url 'http://dl.bintray.com/nebula/gradle-plugins' } }
-
 contacts {
     'justin@halfempty.org' {
         moniker 'Justin Ryan'

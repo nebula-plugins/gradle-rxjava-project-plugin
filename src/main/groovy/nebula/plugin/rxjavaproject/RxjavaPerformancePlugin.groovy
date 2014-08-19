@@ -21,6 +21,12 @@ class RxjavaPerformancePlugin implements Plugin<Project> {
     void apply(Project project) {
         // Facets
         project.plugins.apply(JavaPlugin)
+
+        project.plugins.apply(ShadowPlugin) // Applies JavaPlugin :-(
+
+        // Requires JavaPlugin, to get the ShadowJavaPlugin
+        project.plugins.apply(JavaPlugin)
+
         def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
         facetPlugin.extension.create('perf')
 
@@ -28,11 +34,6 @@ class RxjavaPerformancePlugin implements Plugin<Project> {
             perfCompile 'org.openjdk.jmh:jmh-core:0.9'
             perfCompile 'org.openjdk.jmh:jmh-generator-annprocess:0.9'
         }
-
-        project.plugins.apply(ShadowPlugin) // Applies JavaPlugin :-(
-
-        // Requires JavaPlugin, to get the ShadowJavaPlugin
-        project.plugins.apply(JavaPlugin)
 
         project.plugins.withType(JavaBasePlugin) {
             JavaPluginConvention convention = project.convention.getPlugin(JavaPluginConvention)
