@@ -24,6 +24,10 @@ dependencies {
     testCompile 'com.google.guava:guava:17.0'
 }
 
+test {
+    jvmArgs "-XX:MaxPermSize=512m"
+}
+
 task show << {
     buildscript.configurations.classpath.each { println it }
 }
