@@ -37,6 +37,8 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
         new File(projectDir, '.gitignore') << """
             .gradle-test-kit
+            .gradle
+            **/build
             """.stripIndent()
 
         buildFile << """
@@ -56,6 +58,12 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         grgit.commit(message: 'Setup')
         grgit.push()
     }
+
+    def cleanup() {
+        if (grgit) grgit.close()
+        if (originGit) originGit.close()
+    }
+
     def 'perform release'() {
         when:
         def results = runTasksSuccessfully('release')
