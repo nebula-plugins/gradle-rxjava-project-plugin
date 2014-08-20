@@ -38,7 +38,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         new File(projectDir, '.gitignore') << """
             .gradle-test-kit
             .gradle
-            **/build
+            build/
             """.stripIndent()
 
         buildFile << """
