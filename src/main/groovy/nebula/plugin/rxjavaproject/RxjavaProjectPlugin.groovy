@@ -22,7 +22,6 @@ import nebula.plugin.info.InfoPlugin
 import nebula.plugin.publishing.NebulaJavadocJarPlugin
 import nebula.plugin.publishing.NebulaPublishingPlugin
 import nebula.plugin.publishing.NebulaSourceJarPlugin
-import nebula.plugin.publishing.NebulaTestJarPlugin
 import nebula.plugin.publishing.sign.NebulaSignPlugin
 import nebula.plugin.responsible.FixJavaPlugin
 import nebula.plugin.responsible.NebulaFacetPlugin
@@ -44,20 +43,13 @@ class RxjavaProjectPlugin implements Plugin<Project> {
     void apply(Project project) {
         this.project = project
 
-        project.plugins.apply(FixJavaPlugin)
+        // When running as a multi-module build, we want to treat the rootProject differently, we'll call this a parent project
+        ProjectType projectType = new ProjectType(project)
 
         // Repositories
         project.repositories.jcenter()
 
-        // Publishing
-        project.plugins.apply(NebulaPublishingPlugin)
-        project.plugins.apply(NebulaSignPlugin)
-        project.plugins.apply(NebulaJavadocJarPlugin)
-        project.plugins.apply(NebulaSourceJarPlugin)
-        project.plugins.apply(NebulaTestJarPlugin)
-
-        // Info
-        project.plugins.apply(InfoPlugin)
+        project.plugins.apply(FixJavaPlugin)
 
         // Contacts
         ContactsPlugin contactsPlugin = project.plugins.apply(ContactsPlugin)
@@ -68,9 +60,6 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             }
         }
 
-        // Dependency Locking
-        project.plugins.apply(DependencyLockPlugin)
-
         // IDE Support
         project.plugins.apply EclipsePlugin
         project.plugins.apply IdeaPlugin
@@ -79,52 +68,77 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         def gradleHelper = new GradleHelper(project)
         gradleHelper.addDefaultGroup('com.netflix.rxjava') // TODO This will have to change to reactivex
 
-        // ReactiveX specific plugins
-        project.plugins.apply RxjavaPerformancePlugin
-        project.plugins.apply RxjavaOsgiPlugin
 
-        // Set Default java versions
-        project.plugins.withType(JavaPlugin) { JavaPlugin javaPlugin ->
-            // Facets
-            def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
-            facetPlugin.extension.create('examples') {
-                parentSourceSet = 'main'
-            }
-
-            JavaPluginConvention convention = project.convention.getPlugin(JavaPluginConvention)
-            convention.sourceCompatibility = JavaVersion.VERSION_1_6
-            convention.targetCompatibility = JavaVersion.VERSION_1_6
+        if (projectType.isRootProject) {
+            project.plugins.apply RxJavaReleasePlugin
         }
 
-        // TODO Publish javadoc back to Github for hosting
-        project.tasks.withType(Javadoc) {
-            failOnError = false
-            // we do not want the org.rx.operations package include
-            exclude '**/operations/**'
+        if (projectType.isLeafProject) {
+            // Publishing
+            project.plugins.apply(RxJavaPublishingPlugin)
+            project.plugins.apply(NebulaPublishingPlugin)
+            project.plugins.apply(NebulaSignPlugin)
+            project.plugins.apply(NebulaJavadocJarPlugin)
+            project.plugins.apply(NebulaSourceJarPlugin)
+            //project.plugins.apply(NebulaTestJarPlugin) // Projects should add this themselves if they want it.
 
-            options {
-                // TODO Publish Doclet to global location
-                // doclet = "org.benjchristensen.doclet.DocletExclude"
-                // docletpath = [rootProject.file('./gradle/doclet-exclude.jar')]
+            // Info
+            project.plugins.apply(InfoPlugin)
 
-                // TODO Embed stylesheet into .jar
-                // stylesheetFile = rootProject.file('./gradle/javadocStyleSheet.css')
+            // Contacts
+            project.plugins.apply(ContactsPlugin) // will inherit from parent projects
 
-                // TODO See why this was initially added.
-                // it.classpath = sourceSets.main.compileClasspath
-                windowTitle = "RxJava Javadoc ${project.version}"
+            // Dependency Locking
+            project.plugins.apply(DependencyLockPlugin)
 
-                if (JavaVersion.current().isJava8Compatible()) {
-                    options.addStringOption('Xdoclint:none', '-quiet')
+            // ReactiveX specific plugins
+            project.plugins.apply RxjavaPerformancePlugin
+            project.plugins.apply RxjavaOsgiPlugin
+            project.plugins.apply(RxjavaLicensePlugin)
+
+            // Set Default java versions
+            project.plugins.withType(JavaPlugin) { JavaPlugin javaPlugin ->
+                // Facets
+                def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
+                facetPlugin.extension.create('examples') {
+                    parentSourceSet = 'main'
                 }
-            }
-            options.addStringOption('top').value = '<h2 class="title" style="padding-top:40px">RxJava</h2>'
-        }
 
-        project.tasks.withType(Test) { Test testTask ->
-            testTask.testLogging.exceptionFormat = 'full'
-            testTask.testLogging.events "started"
-            testTask.testLogging.displayGranularity = 2
+                JavaPluginConvention convention = project.convention.getPlugin(JavaPluginConvention)
+                convention.sourceCompatibility = JavaVersion.VERSION_1_6
+                convention.targetCompatibility = JavaVersion.VERSION_1_6
+            }
+
+            // TODO Publish javadoc back to Github for hosting
+            project.tasks.withType(Javadoc) {
+                failOnError = false
+                // we do not want the org.rx.operations package include
+                exclude '**/operations/**'
+
+                options {
+                    // TODO Publish Doclet to global location
+                    // doclet = "org.benjchristensen.doclet.DocletExclude"
+                    // docletpath = [rootProject.file('./gradle/doclet-exclude.jar')]
+
+                    // TODO Embed stylesheet into .jar
+                    // stylesheetFile = rootProject.file('./gradle/javadocStyleSheet.css')
+
+                    // TODO See why this was initially added.
+                    // it.classpath = sourceSets.main.compileClasspath
+                    windowTitle = "RxJava Javadoc ${project.version}"
+
+                    if (JavaVersion.current().isJava8Compatible()) {
+                        options.addStringOption('Xdoclint:none', '-quiet')
+                    }
+                }
+                options.addStringOption('top').value = '<h2 class="title" style="padding-top:40px">RxJava</h2>'
+            }
+
+            project.tasks.withType(Test) { Test testTask ->
+                testTask.testLogging.exceptionFormat = 'full'
+                testTask.testLogging.events "started"
+                testTask.testLogging.displayGranularity = 2
+            }
         }
     }
 }

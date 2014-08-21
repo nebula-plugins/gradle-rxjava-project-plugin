@@ -30,7 +30,7 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
         project.tasks.withType(Upload, disable)
         project.tasks.withType(BuildInfoBaseTask, disable)
 
-        project.plugins.apply(BintrayPlugin) // I wish, we break this apart below so that we can customize it.
+        project.plugins.apply(BintrayPlugin) // I wish, we would break this apart below so that we can customize it.
 
         project.tasks.getByName('verifyReleaseStatus').actions.clear()
         project.tasks.getByName('verifySnapshotStatus').actions.clear()
