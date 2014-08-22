@@ -17,7 +17,7 @@ dependencies {
     compile 'com.netflix.nebula:nebula-project-plugin:1.12.+'
     compile 'com.netflix.nebula:nebula-bintray-plugin:1.12.+' // for publishing
     compile 'com.github.jengelman.gradle.plugins:shadow:1.+'
-    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:0.9.0'
+    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:0.+'
     compile 'com.google.guava:guava:17.0' // For ClasspathHelper
     compile 'org.ajoberstar:gradle-git:0.9.0'
     testCompile 'com.netflix.nebula:nebula-test:1.12.+'
