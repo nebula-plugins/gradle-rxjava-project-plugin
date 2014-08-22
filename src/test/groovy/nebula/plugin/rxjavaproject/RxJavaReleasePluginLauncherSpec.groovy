@@ -6,11 +6,9 @@ import nebula.test.IntegrationSpec
 import org.ajoberstar.grgit.Grgit
 import org.ajoberstar.grgit.Tag
 import org.ajoberstar.grgit.operation.BranchAddOp
-import org.ajoberstar.grgit.operation.BranchChangeOp
-import org.eclipse.jgit.api.CreateBranchCommand
-import org.eclipse.jgit.lib.StoredConfig
 import org.gradle.api.plugins.JavaPlugin
 import spock.lang.Ignore
+import sun.jvm.hotspot.HelloWorld
 
 class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
@@ -136,14 +134,11 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
     def 'perform snapshots from branch'() {
 
         when:
-        def results = runTasksSuccessfully('candidate')
-
-        then:
-        def tags = originGit.tag.list()
-        tags.collect { it.name }.any {it == 'v0.0.1-rc.1'}
-
-        when:
         writeHelloWorld('test')
+        grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
+        grgit.commit(message: 'Adding Hello World')
+
+        def results = runTasksSuccessfully('snapshot')
 
         grgit.branch.add(name: 'feature/myfeature', startPoint: 'master', mode: BranchAddOp.Mode.TRACK)
         grgit.checkout(branch: 'feature/myfeature')
@@ -154,7 +149,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         def result = runTasksSuccessfully('snapshot', 'printVersion')
 
         then:
-        result.standardOutput =~ /0\.0\.1-dev\.3\+myfeature-SNAPSHOT/ // Not a fan of this, I want to remove "dev.3+"
+        result.standardOutput =~ /0\.0\.1-dev\.4\+myfeature-SNAPSHOT/ // Not a fan of this, I want to remove "dev.3+"
     }
 
     // TODO Test failure cases.

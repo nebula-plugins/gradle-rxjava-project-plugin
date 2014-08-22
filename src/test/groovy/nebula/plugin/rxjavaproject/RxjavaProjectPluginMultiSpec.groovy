@@ -26,12 +26,17 @@ class RxjavaProjectPluginMultiSpec extends IntegrationSpec {
 
     Grgit originGit
 
+    def snapshotVer = '0.0.1-dev.1+SNAPSHOT' // TODO Use this until SNAPSHOT versions are fixed.
+
     def setup() {
         useToolingApi = false
 
         def subBuildFile = """
             ${applyPlugin(RxjavaProjectPlugin)}
             apply plugin: 'java'
+            license {
+                ignoreFailures = true
+            }
         """.stripIndent()
 
         // Sub A
@@ -46,6 +51,12 @@ class RxjavaProjectPluginMultiSpec extends IntegrationSpec {
         buildFile << """
             ${applyPlugin(RxjavaProjectPlugin)}
         """.stripIndent()
+
+        new File(projectDir, '.gitignore') << """
+            .gradle-test-kit
+            .gradle
+            build/
+            """.stripIndent()
 
         originGit = Grgit.init(dir: projectDir)
         originGit.add(patterns: ["build.gradle", 'settings.gradle', '.gitignore'] as Set)

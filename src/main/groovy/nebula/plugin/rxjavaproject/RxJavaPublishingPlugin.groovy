@@ -3,14 +3,9 @@ package nebula.plugin.rxjavaproject
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
 import nebula.plugin.bintray.BintrayPlugin
-import nebula.plugin.bintray.NebulaBintrayPublishingPlugin
-import nebula.plugin.bintray.NebulaBintraySyncPublishingPlugin
-import nebula.plugin.bintray.NebulaOJOPublishingPlugin
 import nebula.plugin.info.scm.ScmInfoExtension
-import nebula.plugin.publishing.maven.NebulaBaseMavenPublishingPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.publish.maven.internal.publication.MavenPublicationInternal
 import org.gradle.api.tasks.Upload
 import org.jfrog.gradle.plugin.artifactory.task.BuildInfoBaseTask
 

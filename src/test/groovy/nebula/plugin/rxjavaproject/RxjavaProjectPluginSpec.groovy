@@ -16,8 +16,13 @@
 package nebula.plugin.rxjavaproject
 
 import nebula.test.PluginProjectSpec
+import org.ajoberstar.grgit.Grgit
 
 class RxjavaProjectPluginSpec extends PluginProjectSpec {
+    def setup() {
+        Grgit.init(dir: projectDir)
+    }
+
     @Override
     String getPluginName() {
         'rxjava-project'

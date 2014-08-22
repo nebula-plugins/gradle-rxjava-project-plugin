@@ -8,7 +8,6 @@ import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class RxJavaReleasePlugin  implements Plugin<Project> {
