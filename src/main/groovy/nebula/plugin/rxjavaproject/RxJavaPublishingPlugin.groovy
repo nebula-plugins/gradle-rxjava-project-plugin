@@ -4,8 +4,14 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
 import nebula.plugin.bintray.BintrayPlugin
 import nebula.plugin.info.scm.ScmInfoExtension
+import org.gradle.BuildAdapter
+import org.gradle.BuildListener
+import org.gradle.BuildResult
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.initialization.Settings
+import org.gradle.api.invocation.Gradle
 import org.gradle.api.tasks.Upload
 import org.jfrog.gradle.plugin.artifactory.task.BuildInfoBaseTask
 
@@ -55,6 +61,19 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
             bintray.pkg.issueTrackerUrl = "${url}/issues"
             bintray.pkg.vcsUrl = "${url}.git"
         }
+
+        // Undo BintrayPlugin. We have to use a BuildListener to be after the bintrayPlugin's buildlistener.
+        // I have no idea why they need to depend on a maven local install
+        project.gradle.addBuildListener(new BuildAdapter() {
+            @Override
+            void projectsEvaluated(Gradle gradle) {
+                project.tasks.matching {
+                    it.name == "publishMavenNebulaPublicationToMavenLocal"
+                }.all {
+                    bintrayUpload.dependsOn.remove(it)
+                }
+            }
+        })
 
 //        project.plugins.apply(NebulaBintraySyncPublishingPlugin)
 //

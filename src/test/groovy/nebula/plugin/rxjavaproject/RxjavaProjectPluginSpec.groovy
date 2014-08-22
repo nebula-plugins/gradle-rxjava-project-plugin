@@ -20,7 +20,11 @@ import org.ajoberstar.grgit.Grgit
 
 class RxjavaProjectPluginSpec extends PluginProjectSpec {
     def setup() {
-        Grgit.init(dir: projectDir)
+        // We require to be a git repo
+        def originGit = Grgit.init(dir: projectDir)
+        originGit.add(patterns: ['.gitignore'] as Set)
+        originGit.commit(message: 'Initial checkout')
+        originGit.close()
     }
 
     @Override

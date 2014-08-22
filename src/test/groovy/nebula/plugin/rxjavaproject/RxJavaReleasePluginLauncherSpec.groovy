@@ -8,7 +8,6 @@ import org.ajoberstar.grgit.Tag
 import org.ajoberstar.grgit.operation.BranchAddOp
 import org.gradle.api.plugins.JavaPlugin
 import spock.lang.Ignore
-import sun.jvm.hotspot.HelloWorld
 
 class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
@@ -92,6 +91,13 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
     }
 
     def 'perform candidate'() {
+        useToolingApi = false
+        when:
+        def taskResult = runTasksSuccessfully('tasks', '--all')
+
+        then:
+        !(taskResult.standardOutput =~ /bintrayUpload .* \[.*publishMavenNebulaPublicationToMavenLocal\.*]/)
+
         when:
         def results = runTasksSuccessfully('candidate')
 
