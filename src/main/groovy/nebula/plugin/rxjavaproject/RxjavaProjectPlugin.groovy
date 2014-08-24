@@ -28,6 +28,7 @@ import nebula.plugin.responsible.NebulaFacetPlugin
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.project.AbstractProject
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.javadoc.Javadoc
@@ -65,8 +66,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         project.plugins.apply IdeaPlugin
 
         // Default Group
-        def gradleHelper = new GradleHelper(project)
-        gradleHelper.addDefaultGroup('com.netflix.rxjava') // TODO This will have to change to reactivex
+        def gradleHelper = new GradleHelper( (AbstractProject) project)
+        gradleHelper.addDefaultGroup('io.reactivex')
 
 
         if (projectType.isRootProject) {

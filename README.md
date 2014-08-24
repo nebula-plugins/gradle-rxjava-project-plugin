@@ -3,26 +3,26 @@ gradle-rxjava-project-plugin
 
 Template for RxJava projects
 
-## Usage
-
-### Applying the Plugin
+# Applying the Plugin
 
 To include, add the following to your build.gradle
 
     buildscript {
       repositories { jcenter() }
-
-      dependencies {
-        classpath 'com.netflix.nebula:gradle-rxjava-project-plugin:1.12.+'
-      }
+      dependencies { classpath 'com.netflix.nebula:gradle-rxjava-project-plugin:1.12.+' }
     }
 
-    apply plugin: 'rxjava-project'
+    allprojects {
+        apply plugin: 'rxjava-project'
+    }
 
-### Tasks Provided
+# Variants
 
-`<your tasks>`
+## License Check
 
-### Extensions Provided
+By default the license check is on. To turn it off:
 
-`<your extensions>`
+    license {
+        ignoreFailures = true
+    }
+

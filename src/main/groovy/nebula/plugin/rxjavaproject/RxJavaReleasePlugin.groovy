@@ -1,5 +1,6 @@
 package nebula.plugin.rxjavaproject
 
+import nebula.plugin.publishing.sign.NebulaSignPlugin
 import org.ajoberstar.gradle.git.release.GrgitReleasePlugin
 import org.ajoberstar.gradle.git.release.GrgitReleasePluginExtension
 import org.ajoberstar.grgit.Grgit
@@ -65,6 +66,10 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
 //                    "${branchName}.${current}-SNAPSHOT"
                 }
             }
+        }
+        project.plugins.withType(NebulaSignPlugin) {
+            project.tasks.getByName('bintrayUpload').dependsOn('preparePublish')
+            project.tasks.getByName('artifactoryPublish').dependsOn('preparePublish')
         }
 
         extension.generateTagMessage = { version -> // default is "Release of ${version}"

@@ -52,6 +52,7 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
                 return licenseTasks.any { ((License) it).getHeader() == header }
             }
             doFirst {
+                header.parentFile.mkdirs()
                 copyHeaderFile()
             }
         }
