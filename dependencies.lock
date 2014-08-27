@@ -1,8 +1,9 @@
 {
-  "com.github.jengelman.gradle.plugins:shadow": { "locked": "1.0.3", "requested": "1.+" },
+  "com.github.jengelman.gradle.plugins:shadow": { "locked": "1.0.3", "requested": "1.0.3" },
   "com.google.guava:guava": { "locked": "17.0", "requested": "17.0" },
   "com.netflix.nebula:nebula-bintray-plugin": { "locked": "1.12.3", "requested": "1.12.+" },
-  "com.netflix.nebula:nebula-project-plugin": { "locked": "1.12.12", "requested": "1.12.+" },
+  "com.netflix.nebula:nebula-project-plugin": { "locked": "1.12.13", "requested": "1.12.+" },
+  "com.netflix.nebula:nebula-publishing-plugin": { "locked": "1.12.14", "requested": "1.12.+" },
   "com.netflix.nebula:nebula-test": { "locked": "1.12.2", "requested": "1.12.+" },
   "nl.javadude.gradle.plugins:license-gradle-plugin": { "locked": "0.11.0", "requested": "0.+" },
   "org.ajoberstar:gradle-git": { "locked": "0.9.0", "requested": "0.9.0" }

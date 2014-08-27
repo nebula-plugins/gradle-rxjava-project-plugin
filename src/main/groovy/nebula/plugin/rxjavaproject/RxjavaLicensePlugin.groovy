@@ -1,14 +1,18 @@
 package nebula.plugin.rxjavaproject
 
 import nebula.core.GradleHelper
+import nebula.plugin.publishing.maven.NebulaBaseMavenPublishingPlugin
 import nebula.plugin.responsible.FacetDefinition
 import nebula.plugin.responsible.NebulaFacetPlugin
 import nl.javadude.gradle.plugins.license.License
 import nl.javadude.gradle.plugins.license.LicenseExtension
 import nl.javadude.gradle.plugins.license.LicensePlugin
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.XmlProvider
 import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.api.publish.maven.MavenPublication
 
 /**
  * Leverage license plugin to show missing headers, and inject license into the POM
@@ -59,6 +63,30 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
         project.tasks.withType(License) {
             it.dependsOn(writeTask)
         }
+
+        // POM File
+        def pomConfig = {
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+
+        project.plugins.withType(NebulaBaseMavenPublishingPlugin) { basePlugin ->
+            basePlugin.withMavenPublication { MavenPublication t ->
+                t.pom.withXml(new Action<XmlProvider>() {
+                    @Override
+                    void execute(XmlProvider x) {
+                        def root = x.asNode()
+                        root.children().last() + pomConfig
+                    }
+                })
+            }
+        }
+
     }
 
     File defineHeaderFile() {
