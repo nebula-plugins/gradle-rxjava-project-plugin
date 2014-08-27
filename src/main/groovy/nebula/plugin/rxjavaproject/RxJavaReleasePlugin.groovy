@@ -71,6 +71,8 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
             project.tasks.getByName('bintrayUpload').dependsOn('preparePublish')
             project.tasks.getByName('artifactoryPublish').dependsOn('preparePublish')
         }
+        project.tasks.getByName('bintrayUpload').mustRunAfter('build')
+        project.tasks.getByName('artifactoryPublish').mustRunAfter('build')
 
         extension.generateTagMessage = { version -> // default is "Release of ${version}"
             StringBuilder builder = new StringBuilder()
