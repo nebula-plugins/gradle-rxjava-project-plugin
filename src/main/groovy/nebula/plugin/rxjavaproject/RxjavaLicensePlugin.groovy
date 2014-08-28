@@ -30,6 +30,7 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
         def licenseExtension = project.extensions.getByType(LicenseExtension)
         licenseExtension.skipExistingHeaders = true
         licenseExtension.strictCheck = false
+        licenseExtension.ignoreFailures = true
         licenseExtension.ext.year = Calendar.getInstance().get(Calendar.YEAR)
 
         header = defineHeaderFile()

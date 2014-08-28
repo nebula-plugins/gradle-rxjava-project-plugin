@@ -69,6 +69,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         def gradleHelper = new GradleHelper( (AbstractProject) project)
         gradleHelper.addDefaultGroup('io.reactivex')
 
+        // Default description, a user would just specify it after apply our plugin
+        project.description = project.name
 
         if (projectType.isRootProject) {
             project.plugins.apply RxJavaReleasePlugin
