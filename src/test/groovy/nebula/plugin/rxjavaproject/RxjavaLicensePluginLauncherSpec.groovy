@@ -44,10 +44,11 @@ class RxjavaLicensePluginLauncherSpec extends IntegrationSpec {
         """.stripIndent()
 
         when:
-        def results = runTasksWithFailure('licenseMain')
+        def results = runTasksSuccessfully('licenseMain') // we don't fail the build
 
         then:
-        results.standardError.contains("License violations were found")
+        results.standardOutput.contains('Missing header in: src/main/java/nebula/HelloWorld.java')
+        // results.standardError.contains("License violations were found")
     }
 
     def 'fix license header'() {
