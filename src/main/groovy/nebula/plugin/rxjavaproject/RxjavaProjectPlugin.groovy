@@ -47,38 +47,56 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         // When running as a multi-module build, we want to treat the rootProject differently, we'll call this a parent project
         ProjectType projectType = new ProjectType(project)
 
-        // Repositories
-        project.repositories.jcenter()
+        if (projectType.isLeafProject || projectType.isRootProject) {
+            // Repositories
+            project.repositories.jcenter()
 
-        project.plugins.apply(FixJavaPlugin)
+            project.plugins.apply(FixJavaPlugin)
 
-        // Contacts
-        ContactsPlugin contactsPlugin = project.plugins.apply(ContactsPlugin)
-        project.contacts {
-            'benjchristensen@netflix.com' {
-                github 'benjchristensen'
-                moniker 'Ben Christensen'
+            // Contacts
+            ContactsPlugin contactsPlugin = project.plugins.apply(ContactsPlugin)
+            project.contacts {
+                'benjchristensen@netflix.com' {
+                    github 'benjchristensen'
+                    moniker 'Ben Christensen'
+                }
             }
+
+            // IDE Support
+            project.plugins.apply EclipsePlugin
+            project.plugins.apply IdeaPlugin
+
+            // Default Group
+            def gradleHelper = new GradleHelper((AbstractProject) project)
+            gradleHelper.addDefaultGroup('io.reactivex')
+
+            // Default description, a user would just specify it after apply our plugin
+            project.description = project.name
         }
-
-        // IDE Support
-        project.plugins.apply EclipsePlugin
-        project.plugins.apply IdeaPlugin
-
-        // Default Group
-        def gradleHelper = new GradleHelper( (AbstractProject) project)
-        gradleHelper.addDefaultGroup('io.reactivex')
-
-        // Default description, a user would just specify it after apply our plugin
-        project.description = project.name
 
         if (projectType.isRootProject) {
             project.plugins.apply RxJavaReleasePlugin
+
+            // Dummy tasks as the root level, instead of relying on pass-through
+            if(!projectType.isLeafProject) {
+                // Artifactory plugin does this for artifactoryPublish itself
+                ['build'].each { concreteTaskName ->
+                    def concreteTask = project.task(concreteTaskName)
+                    project.subprojects {
+                        tasks.matching { it.name == concreteTaskName }.all { subprojectBuildTask ->
+                            concreteTask.dependsOn subprojectBuildTask
+                        }
+                    }
+                }
+            }
+        }
+
+        if (projectType.isLeafProject || projectType.isRootProject) {
+            project.plugins.apply(RxJavaPublishingPlugin)
         }
 
         if (projectType.isLeafProject) {
             // Publishing
-            project.plugins.apply(RxJavaPublishingPlugin)
             project.plugins.apply(NebulaPublishingPlugin)
             project.plugins.apply(NebulaSignPlugin)
             project.plugins.apply(NebulaJavadocJarPlugin)

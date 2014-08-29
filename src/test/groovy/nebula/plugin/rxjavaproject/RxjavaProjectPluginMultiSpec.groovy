@@ -22,15 +22,13 @@ import spock.lang.Ignore
 import java.util.jar.Attributes
 import java.util.jar.JarFile
 
-class RxjavaProjectPluginMultiSpec extends IntegrationSpec {
+class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
 
     Grgit originGit
 
     def snapshotVer = '0.0.1-dev.1+SNAPSHOT' // TODO Use this until SNAPSHOT versions are fixed.
 
     def setup() {
-        useToolingApi = false
-
         def subBuildFile = """
             ${applyPlugin(RxjavaProjectPlugin)}
             apply plugin: 'java'
@@ -77,42 +75,4 @@ class RxjavaProjectPluginMultiSpec extends IntegrationSpec {
         fileExists('SubA/build/libs/SubA-1.0.0-SNAPSHOT.jar')
         fileExists('SubB/build/libs/SubB-1.0.0-SNAPSHOT.jar')
     }
-
-    @Ignore
-    def Map<String,String> getManifest(String jarPath) {
-        def jmhJar = new JarFile(new File(projectDir, jarPath))
-        Attributes attrs = jmhJar.manifest.mainAttributes
-        attrs.keySet().collectEntries { Object key ->
-            return [key.toString(), attrs.getValue(key)]
-        }
-    }
-
-    @Ignore
-    def createSubProject(String name, String buildFile) {
-        settingsFile << """
-            include '${name}'
-        """.stripIndent()
-
-        def sub = new File(projectDir, name)
-        sub.mkdirs()
-
-        new File(sub, 'build.gradle') << buildFile
-
-        return sub
-    }
-
-    @Ignore
-    def writeHelloWorld(String pathPrefix, String packageDotted) {
-        def path = 'src/main/java/' + packageDotted.replace('.', '/') + '/HelloWorld.java'
-        def javaFile = createFile("${pathPrefix}${path}")
-        javaFile << """package ${packageDotted};
-
-            public class HelloWorld {
-                public static void main(String[] args) {
-                    System.out.println("Hello Integration Test");
-                }
-            }
-        """.stripIndent()
-    }
-
 }

@@ -15,8 +15,6 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
     Grgit originGit
 
     def setup() {
-        useToolingApi = false
-
         // Place to push to
         def origin = new File(projectDir.parent, "${projectDir.name}.git")
         origin.mkdirs()
