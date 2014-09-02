@@ -17,4 +17,15 @@ class RxJavaPublishingPluginSpec extends Specification {
         'https://github.com:reactivex/rxjava-core.git'   | 'https://github.com/reactivex/rxjava-core'
 
     }
+    def 'testCalculateRepoFromOrigin'(String origin, String repo) {
+        expect:
+        RxJavaPublishingPlugin.calculateRepoFromOrigin(origin) == repo
+
+        where:
+        origin                                           | repo
+        'git@github.com:reactivex/rxjava-core.git'       | 'rxjava-core'
+        'ssh://git@github.com:reactivex/rxjava-core.git' | 'rxjava-core'
+        'https://github.com:reactivex/rxjava-core.git'   | 'rxjava-core'
+
+    }
 }

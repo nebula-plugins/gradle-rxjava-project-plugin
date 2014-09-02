@@ -54,6 +54,8 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
         bintrayUpload.doFirst {
             ScmInfoExtension scmInfo = project.extensions.getByType(ScmInfoExtension)
             // Assuming scmInfo.origin is something like git@github.com:reactivex/rxjava-core.git
+            bintray.pkg.name = calculateRepoFromOrigin(scmInfo.origin) ?: project.name
+
             def url = calculateUrlFromOrigin(scmInfo.origin)
             bintray.pkg.websiteUrl = url
             bintray.pkg.issueTrackerUrl = "${url}/issues"
@@ -91,5 +93,11 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
     static String calculateUrlFromOrigin(String origin) {
         def m = origin =~ GIT_PATTERN
         return "https://${m[0][5]}/${m[0][7]}"
+    }
+
+    static String calculateRepoFromOrigin(String origin) {
+        def m = origin =~ GIT_PATTERN
+        String path = m[0][7]
+        path.tokenize('/').last()
     }
 }
