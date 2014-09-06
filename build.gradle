@@ -1,6 +1,6 @@
 buildscript {
     repositories { jcenter() }
-    dependencies { classpath 'com.netflix.nebula:nebula-plugin-plugin:1.12.3' }
+    dependencies { classpath 'com.netflix.nebula:nebula-plugin-plugin:1.12.+' }
 }
 
 description 'Template for RxJava projects'
@@ -27,8 +27,4 @@ dependencies {
 
 test {
     jvmArgs "-XX:MaxPermSize=512m"
-}
-
-task show << {
-    buildscript.configurations.classpath.each { println it }
 }
