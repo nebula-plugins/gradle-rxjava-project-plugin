@@ -29,6 +29,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.project.AbstractProject
+import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.javadoc.Javadoc
@@ -70,7 +71,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             def gradleHelper = new GradleHelper((AbstractProject) project)
             gradleHelper.addDefaultGroup('io.reactivex')
 
-            // Default description, a user would just specify it after apply our plugin
+            // Default description, a user would just specify it after applying our plugin
             project.description = project.name
         }
 
@@ -96,6 +97,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         }
 
         if (projectType.isLeafProject) {
+            project.plugins.apply(JavaBasePlugin)
+
             // Publishing
             project.plugins.apply(NebulaPublishingPlugin)
             project.plugins.apply(NebulaSignPlugin)
@@ -118,7 +121,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply(RxjavaLicensePlugin)
 
             // Set Default java versions
-            project.plugins.withType(JavaPlugin) { JavaPlugin javaPlugin ->
+            project.plugins.withType(JavaBasePlugin) {
                 // Facets
                 def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
                 facetPlugin.extension.create('examples') {
