@@ -98,6 +98,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
         if (projectType.isLeafProject) {
             project.plugins.apply(JavaBasePlugin)
+            // TODO Make this conditional
+            project.plugins.apply(JavaPlugin)
 
             // Publishing
             project.plugins.apply(NebulaPublishingPlugin)
@@ -121,7 +123,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply(RxjavaLicensePlugin)
 
             // Set Default java versions
-            project.plugins.withType(JavaBasePlugin) {
+            project.plugins.withType(JavaPlugin) {
                 // Facets
                 def facetPlugin = (NebulaFacetPlugin) project.plugins.apply(NebulaFacetPlugin)
                 facetPlugin.extension.create('examples') {

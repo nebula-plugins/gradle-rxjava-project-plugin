@@ -12,6 +12,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.XmlProvider
 import org.gradle.api.plugins.JavaBasePlugin
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.publish.maven.MavenPublication
 
 /**
@@ -37,7 +38,7 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
         licenseExtension.header = header
 
         // Limit to just main sourceSet
-        project.plugins.withType(JavaBasePlugin) {
+        project.plugins.withType(JavaPlugin) {
             // This is actually too late, because of a bug in the license plugin
             licenseExtension.sourceSets = [project.sourceSets.main]
         }
