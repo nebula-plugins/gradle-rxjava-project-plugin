@@ -76,7 +76,7 @@ class RxjavaPerformancePlugin implements Plugin<Project> {
                 jvmArgs '-XX:+FlightRecorder'
 
                 if (project.hasProperty('jmh')) {
-                args(jmh.split(' '))
+                    args(project.jmh.split(' '))
                 } else {
                     //args '-h' // help output
                     args '-f' // fork
