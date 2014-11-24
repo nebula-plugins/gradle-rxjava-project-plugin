@@ -81,8 +81,11 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             // Dummy tasks as the root level, instead of relying on pass-through
             if(!projectType.isLeafProject) {
                 // Artifactory plugin does this for artifactoryPublish itself
-                ['build'].each { concreteTaskName ->
+                ['build', 'bintrayUpload'].each { concreteTaskName ->
                     def concreteTask = project.task(concreteTaskName)
+                    concreteTask.doFirst {
+                        println "Aggregated $concreteTaskName in subprojects"
+                    }
                     project.subprojects {
                         tasks.matching { it.name == concreteTaskName }.all { subprojectBuildTask ->
                             concreteTask.dependsOn subprojectBuildTask
@@ -92,11 +95,9 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             }
         }
 
-        if (projectType.isLeafProject || projectType.isRootProject) {
-            project.plugins.apply(RxJavaPublishingPlugin)
-        }
-
         if (projectType.isLeafProject) {
+            project.plugins.apply(RxJavaPublishingPlugin)
+
             project.plugins.apply(JavaBasePlugin)
             // TODO Make this conditional
             project.plugins.apply(JavaPlugin)
@@ -118,8 +119,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply(DependencyLockPlugin)
 
             // ReactiveX specific plugins
-            project.plugins.apply RxjavaPerformancePlugin
-            project.plugins.apply RxjavaOsgiPlugin
+            project.plugins.apply(RxjavaPerformancePlugin)
+            project.plugins.apply(RxjavaOsgiPlugin)
             project.plugins.apply(RxjavaLicensePlugin)
 
             // Set Default java versions

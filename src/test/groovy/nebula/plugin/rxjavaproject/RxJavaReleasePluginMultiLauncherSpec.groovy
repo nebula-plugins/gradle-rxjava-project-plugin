@@ -81,6 +81,8 @@ class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
         then:
         results.wasExecuted(':build')
         !results.wasExecuted(':artifactoryUpload')
+        results.wasExecuted(':bintrayUpload')
+        results.standardOutput.contains("Aggregated bintrayUpload in subprojects")
         !results.wasUpToDate(':SubA:bintrayUpload')
         !results.wasUpToDate(':SubB:bintrayUpload')
 
