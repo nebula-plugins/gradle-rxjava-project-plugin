@@ -1,13 +1,8 @@
 package nebula.plugin.rxjavaproject
 
 import com.google.common.io.Files
-import nebula.plugin.publishing.maven.NebulaMavenPublishingPlugin
-import nebula.test.IntegrationSpec
 import org.ajoberstar.grgit.Grgit
 import org.ajoberstar.grgit.Tag
-import org.ajoberstar.grgit.operation.BranchAddOp
-import org.gradle.api.plugins.JavaPlugin
-import spock.lang.Ignore
 
 class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
 

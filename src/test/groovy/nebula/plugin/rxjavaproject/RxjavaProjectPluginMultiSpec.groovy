@@ -15,12 +15,7 @@
  */
 package nebula.plugin.rxjavaproject
 
-import nebula.test.IntegrationSpec
 import org.ajoberstar.grgit.Grgit
-import spock.lang.Ignore
-
-import java.util.jar.Attributes
-import java.util.jar.JarFile
 
 class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
 
