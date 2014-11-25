@@ -52,16 +52,18 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
 
         BintrayUploadTask bintrayUpload = (BintrayUploadTask) project.tasks.find { it instanceof BintrayUploadTask }
         bintrayUpload.doFirst {
-            ScmInfoExtension scmInfo = project.extensions.getByType(ScmInfoExtension)
+            ScmInfoExtension scmInfo = project.extensions.findByType(ScmInfoExtension)
             // We have to change the task directly, since they already copied from the extension in an afterEvaluate
 
-            // Assuming scmInfo.origin is something like git@github.com:reactivex/rxjava-core.git
-            bintrayUpload.packageName = calculateRepoFromOrigin(scmInfo.origin) ?: project.name
+            if (scmInfo) {
+                // Assuming scmInfo.origin is something like git@github.com:reactivex/rxjava-core.git
+                bintrayUpload.packageName = calculateRepoFromOrigin(scmInfo.origin) ?: project.rootProject.name
 
-            def url = calculateUrlFromOrigin(scmInfo.origin)
-            bintrayUpload.packageWebsiteUrl = url
-            bintrayUpload.packageIssueTrackerUrl = "${url}/issues"
-            bintrayUpload.packageVcsUrl = "${url}.git"
+                def url = calculateUrlFromOrigin(scmInfo.origin)
+                bintrayUpload.packageWebsiteUrl = url
+                bintrayUpload.packageIssueTrackerUrl = "${url}/issues"
+                bintrayUpload.packageVcsUrl = "${url}.git"
+            }
         }
 
         // Undo BintrayPlugin. We have to use a BuildListener to be after the bintrayPlugin's buildlistener.

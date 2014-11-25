@@ -22,11 +22,10 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
     void apply(Project project) {
         this.project = project
 
-        // TODO rootProject considerations.
         project.plugins.apply(GrgitReleasePlugin)
         def extension = project.extensions.getByType(GrgitReleasePluginExtension)
 
-        grgit = Grgit.open(project.projectDir)
+        grgit = Grgit.open(project.rootProject.projectDir)
 
         extension.grgit = grgit
         extension.version.untaggedStages = ['dev'] as SortedSet

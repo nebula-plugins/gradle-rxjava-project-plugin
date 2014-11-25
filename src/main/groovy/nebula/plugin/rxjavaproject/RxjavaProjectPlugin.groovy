@@ -15,6 +15,7 @@
  */
 package nebula.plugin.rxjavaproject
 
+import com.jfrog.bintray.gradle.BintrayUploadTask
 import nebula.core.GradleHelper
 import nebula.plugin.contacts.ContactsPlugin
 import nebula.plugin.dependencylock.DependencyLockPlugin
@@ -75,29 +76,31 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.description = project.name
         }
 
-        if (projectType.isRootProject) {
-            project.plugins.apply RxJavaReleasePlugin
+        project.plugins.apply RxJavaReleasePlugin
 
-            // Dummy tasks as the root level, instead of relying on pass-through
-            if(!projectType.isLeafProject) {
-                // Artifactory plugin does this for artifactoryPublish itself
-                ['build', 'bintrayUpload'].each { concreteTaskName ->
-                    def concreteTask = project.task(concreteTaskName)
-                    concreteTask.doFirst {
-                        println "Aggregated $concreteTaskName in subprojects"
-                    }
-                    project.subprojects {
-                        tasks.matching { it.name == concreteTaskName }.all { subprojectBuildTask ->
-                            concreteTask.dependsOn subprojectBuildTask
-                        }
+        // Dummy tasks as the root level, instead of relying on pass-through
+        if (projectType.isRootProject && !projectType.isLeafProject) {
+            // Artifactory plugin does this for artifactoryPublish itself
+            ['build'].each { concreteTaskName ->
+                def concreteTask = project.task(concreteTaskName)
+                project.subprojects {
+                    tasks.matching { it.name == concreteTaskName }.all { subprojectBuildTask ->
+                        concreteTask.dependsOn subprojectBuildTask
                     }
                 }
             }
         }
 
-        if (projectType.isLeafProject) {
+        if (projectType.isLeafProject || projectType.isRootProject) {
             project.plugins.apply(RxJavaPublishingPlugin)
+            if (projectType.isRootProject && !project.subprojects.isEmpty() ) {
+                // Root projects shouldn't be publishing, but if they do they can re-enable this task.
+                BintrayUploadTask bintrayUpload = (BintrayUploadTask) project.tasks.find { it instanceof BintrayUploadTask }
+                bintrayUpload.enabled = false
+            }
+        }
 
+        if (projectType.isLeafProject) {
             project.plugins.apply(JavaBasePlugin)
             // TODO Make this conditional
             project.plugins.apply(JavaPlugin)
