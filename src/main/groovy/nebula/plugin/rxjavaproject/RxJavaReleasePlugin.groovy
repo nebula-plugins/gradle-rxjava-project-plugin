@@ -25,6 +25,16 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
         project.plugins.apply(GrgitReleasePlugin)
         def extension = project.extensions.getByType(GrgitReleasePluginExtension)
 
+
+        def projectType = new ProjectType(project)
+        // Avoid release being run on subprojects
+        if (!projectType.isRootProject) {
+            project.tasks.release.onlyIf {
+                def rootTask = project.rootProject.tasks.release
+                !project.gradle.taskGraph.hasTask(rootTask)
+            }
+        }
+
         grgit = Grgit.open(project.rootProject.projectDir)
 
         extension.grgit = grgit
