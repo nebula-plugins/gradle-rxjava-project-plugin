@@ -52,6 +52,7 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
 
         BintrayUploadTask bintrayUpload = (BintrayUploadTask) project.tasks.find { it instanceof BintrayUploadTask }
         bintrayUpload.doFirst {
+
             ScmInfoExtension scmInfo = project.extensions.findByType(ScmInfoExtension)
             // We have to change the task directly, since they already copied from the extension in an afterEvaluate
 

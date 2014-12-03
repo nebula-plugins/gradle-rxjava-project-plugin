@@ -16,8 +16,6 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
     Project project
     Grgit grgit
 
-    def FORMAT = new SimpleDateFormat('yyMMddHHmmss')
-
     @Override
     void apply(Project project) {
         this.project = project
@@ -25,14 +23,10 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
         project.plugins.apply(GrgitReleasePlugin)
         def extension = project.extensions.getByType(GrgitReleasePluginExtension)
 
-
         def projectType = new ProjectType(project)
         // Avoid release being run on subprojects
         if (!projectType.isRootProject) {
-            project.tasks.release.onlyIf {
-                def rootTask = project.rootProject.tasks.release
-                !project.gradle.taskGraph.hasTask(rootTask)
-            }
+            project.tasks.release.enabled = false
         }
 
         grgit = Grgit.open(project.rootProject.projectDir)

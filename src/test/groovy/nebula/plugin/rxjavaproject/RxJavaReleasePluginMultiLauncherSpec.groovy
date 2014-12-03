@@ -3,6 +3,7 @@ package nebula.plugin.rxjavaproject
 import com.google.common.io.Files
 import org.ajoberstar.grgit.Grgit
 import org.ajoberstar.grgit.Tag
+import spock.lang.Ignore
 
 class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
 
@@ -77,7 +78,6 @@ class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
         results.wasExecuted(':build')
         !results.wasExecuted(':artifactoryUpload')
         results.wasExecuted(':bintrayUpload')
-        results.standardOutput.contains("Aggregated bintrayUpload in subprojects")
         !results.wasUpToDate(':SubA:bintrayUpload')
         !results.wasUpToDate(':SubB:bintrayUpload')
 
@@ -99,5 +99,11 @@ class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
         def tag002 = tags2.find { Tag tag -> tag.name == 'v0.0.2'}
         tag002
         tag002.fullMessage == 'Release of 0.0.2\n\n- Adding Test Hello World\n'
+    }
+
+    @Ignore("Not implemented")
+    def 'unable to perform release from submodule'() {
+        expect:
+        runTasksWithFailure(':SubA:release')
     }
 }

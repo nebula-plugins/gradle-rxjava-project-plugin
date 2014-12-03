@@ -67,7 +67,7 @@ class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
         def result = runTasksSuccessfully('build')
 
         then:
-        fileExists('SubA/build/libs/SubA-1.0.0-SNAPSHOT.jar')
-        fileExists('SubB/build/libs/SubB-1.0.0-SNAPSHOT.jar')
+        fileExists("SubA/build/libs/SubA-${snapshotVer}.jar")
+        fileExists("SubB/build/libs/SubB-${snapshotVer}.jar")
     }
 }

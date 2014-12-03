@@ -93,12 +93,10 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
         if (projectType.isLeafProject || projectType.isRootProject) {
             project.plugins.apply(RxJavaPublishingPlugin)
-            if (projectType.isRootProject && !project.subprojects.isEmpty() ) {
-                // Root projects shouldn't be publishing, but if they do they can re-enable this task.
-                BintrayUploadTask bintrayUpload = (BintrayUploadTask) project.tasks.find { it instanceof BintrayUploadTask }
-                bintrayUpload.enabled = false
-            }
         }
+
+        // Info, needed on all projects, so that the publishing can look at scm values
+        project.plugins.apply(InfoPlugin)
 
         if (projectType.isLeafProject) {
             project.plugins.apply(JavaBasePlugin)
@@ -107,13 +105,10 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
             // Publishing
             project.plugins.apply(NebulaPublishingPlugin)
-            project.plugins.apply(NebulaSignPlugin)
+            //project.plugins.apply(NebulaSignPlugin)
             project.plugins.apply(NebulaJavadocJarPlugin)
             project.plugins.apply(NebulaSourceJarPlugin)
             //project.plugins.apply(NebulaTestJarPlugin) // Projects should add this themselves if they want it.
-
-            // Info
-            project.plugins.apply(InfoPlugin)
 
             // Contacts
             project.plugins.apply(ContactsPlugin) // will inherit from parent projects
