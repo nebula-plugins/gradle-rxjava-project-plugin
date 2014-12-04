@@ -1,6 +1,7 @@
 {
   "com.github.jengelman.gradle.plugins:shadow": { "locked": "1.0.3", "requested": "1.0.3" },
   "com.google.guava:guava": { "locked": "17.0", "requested": "17.0" },
+  "com.netflix.nebula:gradle-override-plugin": { "locked": "1.12.1", "requested": "1.12.+" },
   "com.netflix.nebula:nebula-bintray-plugin": { "locked": "1.12.6", "requested": "1.12.+" },
   "com.netflix.nebula:nebula-project-plugin": { "locked": "1.12.17", "requested": "1.12.+" },
   "com.netflix.nebula:nebula-publishing-plugin": { "locked": "1.12.16", "requested": "1.12.+" },
