@@ -20,6 +20,7 @@ import nebula.core.GradleHelper
 import nebula.plugin.contacts.ContactsPlugin
 import nebula.plugin.dependencylock.DependencyLockPlugin
 import nebula.plugin.info.InfoPlugin
+import nebula.plugin.override.NebulaOverridePlugin
 import nebula.plugin.publishing.NebulaJavadocJarPlugin
 import nebula.plugin.publishing.NebulaPublishingPlugin
 import nebula.plugin.publishing.NebulaSourceJarPlugin
@@ -115,6 +116,8 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
             // Dependency Locking
             project.plugins.apply(DependencyLockPlugin)
+
+            project.plugins.apply(NebulaOverridePlugin)
 
             // ReactiveX specific plugins
             project.plugins.apply(RxjavaPerformancePlugin)
