@@ -93,7 +93,5 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         attrs.keySet().collectEntries { Object key ->
             return [key.toString(), attrs.getValue(key)]
         }
-
-
     }
 }
