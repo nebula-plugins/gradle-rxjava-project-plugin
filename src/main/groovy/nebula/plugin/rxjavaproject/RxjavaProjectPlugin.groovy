@@ -102,7 +102,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
         if (projectType.isLeafProject) {
             project.plugins.apply(JavaBasePlugin)
             // TODO Make this conditional
-            project.plugins.apply(JavaPlugin)
+            //project.plugins.apply(JavaPlugin)
 
             // Publishing
             project.plugins.apply(NebulaPublishingPlugin)
@@ -134,7 +134,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
                 JavaPluginConvention convention = project.convention.getPlugin(JavaPluginConvention)
                 convention.sourceCompatibility = JavaVersion.VERSION_1_6
-                convention.targetCompatibility = JavaVersion.VERSION_1_6
+                //convention.targetCompatibility = JavaVersion.VERSION_1_6
             }
 
             // TODO Publish javadoc back to Github for hosting
