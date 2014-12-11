@@ -32,7 +32,6 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         createFile('src/examples/java/Example.java') << 'public class Example {}'
         createFile('src/perf/java/Perf.java') << 'public class Perf {}'
 
-        createFile('gradle.properties') << 'version=1.0.0-SNAPSHOT'
         buildFile << """
             ${applyPlugin(RxjavaProjectPlugin)}
             apply plugin: 'java'
@@ -48,7 +47,7 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
             """.stripIndent()
 
         originGit = Grgit.init(dir: projectDir)
-        originGit.add(patterns: ["build.gradle", 'settings.gradle', '.gitignore'] as Set)
+        originGit.add(patterns: ["build.gradle", 'settings.gradle', '.gitignore', 'src'] as Set)
         originGit.commit(message: 'Initial checkout')
     }
 
@@ -64,7 +63,8 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
 
         then:
         fileExists('build/classes/main/reactivex/HelloWorld.class')
-        def snapshotVer = '0.0.1-dev.1+SNAPSHOT' // TODO Use this until SNAPSHOT versions are fixed.
+        // 0.1.0-dev.1.uncommitted+59d316c
+        def snapshotVer = "0.1.0-SNAPSHOT"
         fileExists("build/libs/stand-it-all-up-${snapshotVer}-javadoc.jar")
         fileExists("build/libs/stand-it-all-up-${snapshotVer}-sources.jar")
         fileExists("build/libs/stand-it-all-up-${snapshotVer}.jar")
@@ -84,6 +84,18 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         new File(projectDir, 'build/docs/javadoc/index.html').text.contains("<title>RxJava Javadoc ${snapshotVer}</title>")
         def jmhManifest = getManifest("build/libs/stand-it-all-up-${snapshotVer}-benchmarks.jar")
         jmhManifest['Main-Class'] == 'org.openjdk.jmh.Main'
+    }
+
+    def 'dev build with changes'() {
+        setup:
+        new File(projectDir, 'gradle.properties') << "counter=1"
+        // Don't commit this file, we want a local untracked changed
+
+        when:
+        runTasksSuccessfully('build')
+
+        then:
+        fileExists("build/libs/dev-build-with-changes-0.1.0-SNAPSHOT.jar")
     }
 
     @Ignore

@@ -21,7 +21,7 @@ class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
 
     Grgit originGit
 
-    def snapshotVer = '0.0.1-dev.1+SNAPSHOT' // TODO Use this until SNAPSHOT versions are fixed.
+    def snapshotVer = '0.1.0-SNAPSHOT'
 
     def setup() {
         def subBuildFile = """
@@ -67,6 +67,7 @@ class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
         def result = runTasksSuccessfully('build')
 
         then:
+        //new File(projectDir)
         fileExists("SubA/build/libs/SubA-${snapshotVer}.jar")
         fileExists("SubB/build/libs/SubB-${snapshotVer}.jar")
     }

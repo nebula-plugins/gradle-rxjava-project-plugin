@@ -4,6 +4,7 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
 import nebula.plugin.bintray.BintrayPlugin
 import nebula.plugin.info.scm.ScmInfoExtension
+import nebula.plugin.publishing.sign.NebulaSignPlugin
 import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -33,15 +34,6 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
 
         project.tasks.getByName('verifyReleaseStatus').actions.clear()
         project.tasks.getByName('verifySnapshotStatus').actions.clear()
-
-        // Ripping apart NebulaBintrayPublishingPlugin
-//        def bintrayUpload = new NebulaBintrayPublishingPlugin().addBintray(project)
-//        project.plugins.withType(NebulaBaseMavenPublishingPlugin) { NebulaBaseMavenPublishingPlugin mavenPublishingPlugin ->
-//            mavenPublishingPlugin.withMavenPublication { MavenPublicationInternal mavenPublication ->
-//                // Ensure everything is built before uploading
-//                bintrayUpload.dependsOn(mavenPublication.publishableFiles)
-//            }
-//        }
 
         // Configuring for us
         BintrayExtension bintray = project.extensions.getByType(BintrayExtension)
@@ -80,12 +72,10 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
             }
         })
 
-//        project.plugins.apply(NebulaBintraySyncPublishingPlugin)
-//
-//        // Instead of NebulaOJOPublishingPlugin
-//        def ojo = new NebulaOJOPublishingPlugin()
-//        ojo.project = project
-//        ojo.applyArtifactory()
+        project.plugins.withType(NebulaSignPlugin) {
+            project.tasks.getByName('bintrayUpload').dependsOn('preparePublish')
+            project.tasks.getByName('artifactoryPublish').dependsOn('preparePublish')
+        }
 
     }
 

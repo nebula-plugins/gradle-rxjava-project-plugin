@@ -72,10 +72,11 @@ class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
 
     def 'perform release'() {
         when:
-        def results = runTasksSuccessfully('release')
+        def results = runTasksSuccessfully('final')
 
         then:
-        results.wasExecuted(':build')
+        results.wasExecuted(':SubA:build')
+        results.wasExecuted(':SubB:build')
         !results.wasExecuted(':artifactoryUpload')
         results.wasExecuted(':bintrayUpload')
         !results.wasUpToDate(':SubA:bintrayUpload')
@@ -83,9 +84,12 @@ class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
 
         //Grgit originGit = Grgit.open(origin)
         def tags = originGit.tag.list()
-        Tag tag001 = tags.find { Tag tag -> tag.name == 'v0.0.1' }
+        Tag tag001 = tags.find { Tag tag -> tag.name == 'v0.1.0' }
         tag001
-        tag001.fullMessage == 'Release of 0.0.1'
+        tag001.shortMessage == 'Release of 0.1.0'
+        tag001.fullMessage.startsWith('Release of 0.1.0')
+        tag001.fullMessage.contains(": Setup")
+        tag001.fullMessage.contains(": Initial checkout")
 
         when:
         writeHelloWorld('SubB/', 'test')

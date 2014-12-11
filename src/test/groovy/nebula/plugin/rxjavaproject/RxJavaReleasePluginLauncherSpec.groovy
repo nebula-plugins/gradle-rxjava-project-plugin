@@ -45,7 +45,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
             ${applyPlugin(JavaPlugin)}
 
             task printVersion << {
-                println "Version is \${version}"
+                logger.lifecycle "Version is \${version}"
             }
             """.stripIndent()
 
@@ -70,9 +70,9 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
         //Grgit originGit = Grgit.open(origin)
         def tags = originGit.tag.list()
-        Tag tag001 = tags.find { Tag tag -> tag.name == 'v0.0.1' }
+        Tag tag001 = tags.find { Tag tag -> tag.name == 'v0.1.0' }
         tag001
-        tag001.fullMessage == 'Release of 0.0.1'
+        tag001.fullMessage == 'Release of 0.1.0'
 
         when:
         writeHelloWorld('test')
@@ -83,7 +83,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
         then:
         def tags2 = originGit.tag.list()
-        def tag002 = tags2.find { Tag tag -> tag.name == 'v0.0.2'}
+        def tag002 = tags2.find { Tag tag -> tag.name == 'v0.2.0'}
         tag002
         tag002.fullMessage == 'Release of 0.0.2\n\n- Adding Hello World\n'
     }
@@ -101,7 +101,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
         then:
         def tags = originGit.tag.list()
-        tags.find { Tag tag -> tag.name == 'v0.0.1-rc.1' }
+        tags.find { Tag tag -> tag.name == 'v0.1.0-rc.1' }
 
         when:
         writeHelloWorld('test')
@@ -112,37 +112,36 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
         then:
         def tags2 = originGit.tag.list()
-        tags2.find { Tag tag -> tag.name == 'v0.0.1-rc.2'}
+        tags2.find { Tag tag -> tag.name == 'v0.1.0-rc.2'}
     }
 
-    @Ignore("Can't get -SNAPSHOT in the string")
     def 'perform snapshots'() {
         when:
         def results = runTasksSuccessfully('candidate')
 
         then:
         def tags = originGit.tag.list()
-        tags.collect { it.name }.any {it == 'v0.0.1-rc.1'}
+        tags.collect { it.name }.any {it == 'v0.1.0-rc.1'}
 
         when:
         writeHelloWorld('test')
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
 
-        def result = runTasksSuccessfully('snapshot', 'printVersion')
+        def result = runTasksSuccessfully('printVersion')
 
         then:
-        result.standardOutput.contains("Version is v0.0.1-dev.3-SNAPSHOT")
+        result.standardOutput.contains("Version is 0.1.0-SNAPSHOT")
     }
 
-    def 'perform snapshots from branch'() {
+    def 'perform dev snapshots from branch'() {
 
         when:
         writeHelloWorld('test')
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
 
-        def results = runTasksSuccessfully('snapshot')
+        def results = runTasksSuccessfully('dev')
 
         grgit.branch.add(name: 'feature/myfeature', startPoint: 'master', mode: BranchAddOp.Mode.TRACK)
         grgit.checkout(branch: 'feature/myfeature')
@@ -150,10 +149,10 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
 
-        def result = runTasksSuccessfully('snapshot', 'printVersion')
+        def result = runTasksSuccessfully('dev', 'printVersion')
 
         then:
-        result.standardOutput =~ /0\.0\.1-dev\.4\+myfeature-SNAPSHOT/ // Not a fan of this, I want to remove "dev.3+"
+        result.standardOutput =~ /0\.1\.0-dev\.4\+myfeature-SNAPSHOT/ // Not a fan of this, I want to remove "dev.3+"
     }
 
     // TODO Test failure cases.
