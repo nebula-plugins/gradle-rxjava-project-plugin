@@ -41,12 +41,15 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
         def cliTasks = project.gradle.startParameter.taskNames
         def hasSnapshot = cliTasks.contains('snapshot')
         def hasCandidate = cliTasks.contains('candidate')
-        def hasRelease = cliTasks.contains('release')
+        def hasRelease = cliTasks.contains('release') || cliTasks.contains('final')
         if ([hasSnapshot, hasCandidate, hasRelease].count { it } > 2) {
             throw new GradleException("Only snapshot, candidate, or release can be specified.")
         }
         def snapshotTask = project.task(dependsOn: 'release', 'snapshot')
         def candidateTask = project.task(dependsOn: 'release', 'candidate')
+
+        // Forwards compatible with 2.2 "final" task
+        project.task(dependsOn: "release", "final")
 
         if (hasCandidate) {
             project.ext['release.stage'] = 'rc'
