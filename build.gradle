@@ -1,3 +1,4 @@
+// Can't specify dynamic versions in new syntax
 //plugins {
 //    id "nebula.nebula-plugin" version "2.0.1"
 //}

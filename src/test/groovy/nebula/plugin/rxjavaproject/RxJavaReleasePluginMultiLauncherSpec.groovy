@@ -96,18 +96,13 @@ class RxJavaReleasePluginMultiLauncherSpec extends RxJavaIntegrationSpec {
         grgit.add(patterns: ['SubB/src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Test Hello World')
 
-        runTasksSuccessfully('release')
+        runTasksSuccessfully('final')
 
         then:
         def tags2 = originGit.tag.list()
-        def tag002 = tags2.find { Tag tag -> tag.name == 'v0.0.2'}
+        def tag002 = tags2.find { Tag tag -> tag.name == 'v0.2.0'}
         tag002
-        tag002.fullMessage == 'Release of 0.0.2\n\n- Adding Test Hello World\n'
+        tag002.fullMessage  =~ /Release of 0\.2\.0\s+- [0-9a-fA-F]+: Adding Test Hello World/
     }
 
-    @Ignore("Not implemented")
-    def 'unable to perform release from submodule'() {
-        expect:
-        runTasksWithFailure(':SubA:release')
-    }
 }

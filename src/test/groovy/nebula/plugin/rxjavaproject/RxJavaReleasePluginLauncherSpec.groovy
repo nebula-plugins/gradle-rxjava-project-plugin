@@ -61,7 +61,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
 
     def 'perform release'() {
         when:
-        def results = runTasksSuccessfully('release')
+        def results = runTasksSuccessfully('final')
 
         then:
         results.wasExecuted(':build')
@@ -72,20 +72,21 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         def tags = originGit.tag.list()
         Tag tag001 = tags.find { Tag tag -> tag.name == 'v0.1.0' }
         tag001
-        tag001.fullMessage == 'Release of 0.1.0'
+        tag001.fullMessage.startsWith 'Release of 0.1.0'
 
         when:
         writeHelloWorld('test')
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
 
-        runTasksSuccessfully('release')
+        runTasksSuccessfully('final')
 
         then:
         def tags2 = originGit.tag.list()
         def tag002 = tags2.find { Tag tag -> tag.name == 'v0.2.0'}
         tag002
-        tag002.fullMessage == 'Release of 0.0.2\n\n- Adding Hello World\n'
+        tag002.fullMessage.startsWith 'Release of 0.2.0\n\n- '
+        tag002.fullMessage.contains('Adding Hello World\n')
     }
 
     def 'perform candidate'() {
@@ -141,19 +142,36 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
 
-        def results = runTasksSuccessfully('dev')
+        def result = runTasksSuccessfully('devSnapshot', 'printVersion')
+        then:
+        result.standardOutput =~ /Version is 0\.1\.0-dev\.3/
 
+        when:
         grgit.branch.add(name: 'feature/myfeature', startPoint: 'master', mode: BranchAddOp.Mode.TRACK)
         grgit.checkout(branch: 'feature/myfeature')
 
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
         grgit.commit(message: 'Adding Hello World')
 
-        def result = runTasksSuccessfully('dev', 'printVersion')
+        def result2 = runTasksSuccessfully('devSnapshot', 'printVersion')
 
         then:
-        result.standardOutput =~ /0\.1\.0-dev\.4\+myfeature-SNAPSHOT/ // Not a fan of this, I want to remove "dev.3+"
+        result2.standardOutput =~ /Version is 0\.1\.0-dev\.4\+myfeature/
     }
 
-    // TODO Test failure cases.
+    def 'travisci model'() {
+        when:
+        writeHelloWorld('test')
+        grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
+        grgit.commit(message: 'Adding Hello World')
+        grgit.tag.add(name: 'v0.3.0')
+
+        def results = runTasksSuccessfully('-Prelease.useLastTag=true', 'final', 'printVersion')
+
+        then:
+        results.wasExecuted(':build')
+        !results.wasExecuted(':artifactoryUpload')
+        !results.wasUpToDate(':bintrayUpload')
+        results.standardOutput.contains("Version is 0.3.0")
+    }
 }

@@ -15,7 +15,7 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
             buildscript {
                 repositories { jcenter() }
                 dependencies {
-                    classpath 'com.android.tools.build:gradle:0.12.+' // 0.12.x is for Gradle 1.12 projects
+                    classpath 'com.android.tools.build:gradle:1.+'
                 }
             }
 
@@ -38,7 +38,7 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
                 }
                 buildTypes {
                     release {
-                        runProguard false
+                        minifyEnabled false
                     }
                 }
             }
