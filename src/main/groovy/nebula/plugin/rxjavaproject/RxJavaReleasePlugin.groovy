@@ -33,7 +33,7 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
         project.tasks.matching { it.name == 'bintrayUpload' }.all { Task task ->
             project.gradle.taskGraph.whenReady { TaskExecutionGraph graph ->
                 task.onlyIf {
-                    graph.hasTask('final') || graph.hasTask('rc')
+                    graph.hasTask(':final') || graph.hasTask(':candidate')
                 }
             }
         }
@@ -41,7 +41,7 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
         project.tasks.matching { it.name == 'artifactoryPublish'}.all { Task task ->
             project.gradle.taskGraph.whenReady { TaskExecutionGraph graph ->
                 task.onlyIf {
-                    graph.hasTask("SNAPSHOT")
+                    graph.hasTask(":snapshot")
                 }
             }
         }
