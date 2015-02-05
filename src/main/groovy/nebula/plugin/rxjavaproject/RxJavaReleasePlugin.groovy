@@ -10,7 +10,7 @@ import org.gradle.api.Task
 import org.gradle.api.execution.TaskExecutionGraph
 
 class RxJavaReleasePlugin  implements Plugin<Project> {
-
+    static final String TRAVIS_CI = 'release.travisci'
     Project project
 
     @Override
@@ -46,6 +46,8 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
             }
         }
 
-
+        if (project.hasProperty(TRAVIS_CI) && project.property(TRAVIS_CI).toBoolean()) {
+            project.tasks.release.deleteAllActions() // remove tagging op on travisci
+        }
     }
 }

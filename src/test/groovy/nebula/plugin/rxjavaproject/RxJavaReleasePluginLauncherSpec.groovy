@@ -159,7 +159,7 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         result2.standardOutput =~ /Version is 0\.1\.0-dev\.4\+myfeature/
     }
 
-    def 'travisci model'() {
+    def 'travisci model using lastTag'() {
         when:
         writeHelloWorld('test')
         grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
@@ -173,5 +173,19 @@ class RxJavaReleasePluginLauncherSpec extends IntegrationSpec {
         !results.wasExecuted(':artifactoryUpload')
         !results.wasUpToDate(':bintrayUpload')
         results.standardOutput.contains("Version is 0.3.0")
+    }
+
+    def 'travisci snapshot model'() {
+        when:
+        writeHelloWorld('test')
+        grgit.add(patterns: ['src/main/java/test/HelloWorld.java'] as Set)
+        grgit.commit(message: 'Adding Hello World')
+        grgit.tag.add(name: 'v0.3.0')
+
+        def results = runTasksSuccessfully('-Prelease.travisci=true', 'snapshot', 'printVersion')
+
+        then:
+        results.wasExecuted(':build')
+        results.standardOutput.contains("Version is 0.4.0-SNAPSHOT")
     }
 }

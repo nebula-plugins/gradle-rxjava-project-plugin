@@ -1,3 +1,8 @@
+2.2.2 / 2015-02-05
+==================
+
+* Add -Prelease.travisci flag to disable repo tagging
+
 2.2.1 / 2014-01-19
 ==================
 

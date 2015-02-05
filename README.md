@@ -40,6 +40,10 @@ To include, add the following to your build.gradle
         apply plugin: 'rxjava-project'
     }
 
+# Parameters
+
+* `-Prelease.travisci=true` - this will disable tagging
+
 # Variants
 
 ## License Check
