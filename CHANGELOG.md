@@ -1,3 +1,8 @@
+2.2.3 / 2015-02-06
+==================
+
+* Make -Prelease.travisci remove the git check from prepare
+
 2.2.2 / 2015-02-05
 ==================
 
