@@ -48,6 +48,7 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
 
         if (project.hasProperty(TRAVIS_CI) && project.property(TRAVIS_CI).toBoolean()) {
             project.tasks.release.deleteAllActions() // remove tagging op on travisci
+            project.tasks.prepare.deleteAllActions()
         }
     }
 }
