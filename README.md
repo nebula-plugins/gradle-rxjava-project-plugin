@@ -1,5 +1,10 @@
 gradle-rxjava-project-plugin
 ==============
+[![Build Status](https://travis-ci.org/nebula-plugins/projects/gradle-rxjava-project-plugin.svg?branch=master)](https://travis-ci.org/nebula-plugins/projects/gradle-rxjava-project-plugin)
+[![Coverage Status](https://coveralls.io/repos/nebula-plugins/projects/gradle-rxjava-project-plugin/badge.svg?branch=masterservice=github)](https://coveralls.io/github/nebula-plugins/projects/gradle-rxjava-project-plugin?branch=master)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/nebula-plugins/projects/gradle-rxjava-project-plugin?utm_source=badgeutm_medium=badgeutm_campaign=pr-badge)
+[![Apache 2.0](https://img.shields.io/github/license/nebula-plugins/projects/gradle-rxjava-project-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 
 This plugin is to support projects in the ReactiveX org (and it isn't meant to be used elsewhere). It is at its essence
 just a combination of other plugins that are common to all ReactiveX projects, with some additional configuration. The 
