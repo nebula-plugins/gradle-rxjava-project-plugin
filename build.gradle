@@ -65,7 +65,7 @@ apply from: 'https://raw.githubusercontent.com/nebula-plugins/nebula-core/1a495c
 pluginBundle {
     plugins {
         dependencyLock {
-            id = 'rxjava-project'
+            id = 'nebula.rxjava-project'
             displayName = 'RxJava Project Template'
             description = project.description
             tags = ['nebula', 'rxjava', 'project']
