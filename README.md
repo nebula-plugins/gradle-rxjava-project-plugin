@@ -29,20 +29,29 @@ For reference, these are Gradle-related modules used:
   * com.netflix.nebula:nebula-publishing-plugin for producing a jar, source jar, javadoc jar with metadata about how it was produced.
   * com.github.jengelman.gradle.plugins:shadow for generating a binary for the performances tests to run from.
   * nl.javadude.gradle.plugins:license-gradle-plugin for license recommendations
-  * org.ajoberstar:gradle-git:0.9.0 for release process.
-  * com.netflix.nebula:nebula-test for Gradle integration tests.
+  * org.ajoberstar:gradle-git:1.3.0 for release process.
 
 # Applying the Plugin
 
 To include, add the following to your build.gradle
 
+    plugins {
+      id 'nebula.rxjava-project' version '3.0.0'
+    }
+    
+    subprojects { // if you have subprojects
+      apply plugin: 'nebula.rxjava-project'
+    }
+
+or if older than gradle 2.1
+
     buildscript {
       repositories { jcenter() }
-      dependencies { classpath 'com.netflix.nebula:gradle-rxjava-project-plugin:1.12.+' }
+      dependencies { classpath 'com.netflix.nebula:gradle-rxjava-project-plugin:3.+' }
     }
 
     allprojects {
-        apply plugin: 'rxjava-project'
+        apply plugin: 'nebula.rxjava-project'
     }
 
 # Parameters
@@ -59,3 +68,33 @@ By default the license check is on. To turn it off:
         ignoreFailures = true
     }
 
+Gradle Compatibility Tested
+---------------------------
+
+Built with Oracle JDK7
+Tested with Oracle JDK8
+
+| Gradle Version | Works |
+| :------------: | :---: |
+| 2.2.1          | yes   |
+| 2.3            | yes   |
+| 2.4            | yes   |
+| 2.5            | yes   |
+| 2.6            | yes   |
+
+LICENSE
+=======
+
+Copyright 2014-2015 Netflix, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+<http://www.apache.org/licenses/LICENSE-2.0>
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

@@ -27,7 +27,6 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
     Grgit originGit
 
     def setup() {
-        useToolingApi = false
         writeHelloWorld('reactivex')
         createFile('src/examples/java/Example.java') << 'public class Example {}'
         createFile('src/perf/java/Perf.java') << 'public class Perf {}'
@@ -37,6 +36,14 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
             apply plugin: 'java'
             license {
                 ignoreFailures = true
+            }
+            publishing {
+                repositories {
+                    maven {
+                        name 'test'
+                        url 'build/testmaven'
+                    }
+                }
             }
         """.stripIndent()
 
@@ -49,6 +56,7 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         originGit = Grgit.init(dir: projectDir)
         originGit.add(patterns: ["build.gradle", 'settings.gradle', '.gitignore', 'src'] as Set)
         originGit.commit(message: 'Initial checkout')
+        originGit.remote.add(name: 'origin', url: 'https://test.git.host/project/repo.git')
     }
 
     def cleanup() {
@@ -59,7 +67,7 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
 
     def 'stand it all up'() {
         when:
-        def result = runTasksSuccessfully('build')
+        def result = runTasksSuccessfully('build', 'publishNebulaPublicationToTestRepository')
 
         then:
         fileExists('build/classes/main/reactivex/HelloWorld.class')

@@ -29,7 +29,7 @@ class RxjavaProjectPluginSpec extends PluginProjectSpec {
 
     @Override
     String getPluginName() {
-        'rxjava-project'
+        'nebula.rxjava-project'
     }
 
 }

@@ -1,16 +1,28 @@
+/*
+ * Copyright 2014-2015 Netflix, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nebula.plugin.rxjavaproject
 
+import nebula.core.ProjectType
 import nebula.plugin.release.NetflixOssStrategies
-import nebula.plugin.release.OverrideStrategies
 import nebula.plugin.release.ReleasePlugin
 import org.ajoberstar.gradle.git.release.base.ReleasePluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.execution.TaskExecutionGraph
 
 class RxJavaReleasePlugin  implements Plugin<Project> {
-    static final String TRAVIS_CI = 'release.travisci'
     Project project
 
     @Override
@@ -19,36 +31,12 @@ class RxJavaReleasePlugin  implements Plugin<Project> {
 
         project.plugins.apply(ReleasePlugin)
 
-        ReleasePluginExtension releaseExtension = project.extensions.findByType(ReleasePluginExtension)
-        releaseExtension.with {
-            defaultVersionStrategy = NetflixOssStrategies.SNAPSHOT
-        }
-
-        // Wire tasks
-        project.tasks.matching { it.name == 'bintrayUpload' || it.name == 'artifactoryPublish'}.all { Task task ->
-            task.mustRunAfter('build')
-            project.rootProject.tasks.release.dependsOn(task)
-        }
-
-        project.tasks.matching { it.name == 'bintrayUpload' }.all { Task task ->
-            project.gradle.taskGraph.whenReady { TaskExecutionGraph graph ->
-                task.onlyIf {
-                    graph.hasTask(':final') || graph.hasTask(':candidate')
-                }
+        ProjectType projectType = new ProjectType(project)
+        if (projectType.isRootProject) {
+            ReleasePluginExtension releaseExtension = project.extensions.findByType(ReleasePluginExtension)
+            releaseExtension.with {
+                defaultVersionStrategy = NetflixOssStrategies.SNAPSHOT
             }
-        }
-
-        project.tasks.matching { it.name == 'artifactoryPublish'}.all { Task task ->
-            project.gradle.taskGraph.whenReady { TaskExecutionGraph graph ->
-                task.onlyIf {
-                    graph.hasTask(":snapshot")
-                }
-            }
-        }
-
-        if (project.hasProperty(TRAVIS_CI) && project.property(TRAVIS_CI).toBoolean()) {
-            project.tasks.release.deleteAllActions() // remove tagging op on travisci
-            project.tasks.prepare.deleteAllActions()
         }
     }
 }

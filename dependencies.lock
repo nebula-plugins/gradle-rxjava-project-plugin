@@ -1,11 +1,12 @@
 {
-  "com.github.jengelman.gradle.plugins:shadow": { "locked": "1.2.0", "requested": "1.+" },
+  "com.github.jengelman.gradle.plugins:shadow": { "locked": "1.2.2", "requested": "1.+" },
   "com.google.guava:guava": { "locked": "17.0", "requested": "17.0" },
-  "com.netflix.nebula:gradle-override-plugin": { "locked": "2.0.1", "requested": "2.+" },
-  "com.netflix.nebula:nebula-bintray-plugin": { "locked": "2.0.2", "requested": "2.+" },
-  "com.netflix.nebula:nebula-project-plugin": { "locked": "2.0.0", "requested": "2.+" },
-  "com.netflix.nebula:nebula-publishing-plugin": { "locked": "2.0.1", "requested": "2.+" },
-  "com.netflix.nebula:nebula-release-plugin": { "locked": "2.2.4", "requested": "2.+" },
-  "com.netflix.nebula:nebula-test": { "locked": "2.0.5", "requested": "2.+" },
+  "com.netflix.nebula:gradle-override-plugin": { "locked": "2.2.0", "requested": "2.+" },
+  "com.netflix.nebula:nebula-bintray-plugin": { "locked": "3.1.0", "requested": "3.+" },
+  "com.netflix.nebula:nebula-core": { "locked": "3.0.0", "requested": "3.+" },
+  "com.netflix.nebula:nebula-project-plugin": { "locked": "3.0.1", "requested": "3.+" },
+  "com.netflix.nebula:nebula-publishing-plugin": { "locked": "4.0.1", "requested": "4.+" },
+  "com.netflix.nebula:nebula-release-plugin": { "locked": "3.0.1", "requested": "3.+" },
+  "com.netflix.nebula:nebula-test": { "locked": "3.1.0", "requested": "3.0.0" },
   "nl.javadude.gradle.plugins:license-gradle-plugin": { "locked": "0.11.0", "requested": "0.+" }
 }
