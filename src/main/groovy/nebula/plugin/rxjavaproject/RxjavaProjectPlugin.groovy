@@ -21,6 +21,11 @@ import nebula.plugin.contacts.ContactsPlugin
 import nebula.plugin.dependencylock.DependencyLockPlugin
 import nebula.plugin.info.InfoPlugin
 import nebula.plugin.override.NebulaOverridePlugin
+import nebula.plugin.publishing.maven.MavenDeveloperPlugin
+import nebula.plugin.publishing.maven.MavenManifestPlugin
+import nebula.plugin.publishing.maven.MavenResolvedDependenciesJarPlugin
+import nebula.plugin.publishing.maven.MavenResolvedDependenciesPlugin
+import nebula.plugin.publishing.maven.MavenScmPlugin
 import nebula.plugin.publishing.publications.JavadocJarPlugin
 import nebula.plugin.publishing.maven.MavenPublishPlugin
 import nebula.plugin.publishing.publications.SourceJarPlugin
@@ -28,7 +33,6 @@ import nebula.plugin.responsible.NebulaFacetPlugin
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.internal.project.AbstractProject
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
@@ -99,7 +103,10 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply(JavaBasePlugin)
 
             // Publishing
-            project.plugins.apply(MavenPublishPlugin)
+            project.plugins.apply(MavenResolvedDependenciesJarPlugin)
+            project.plugins.apply(MavenDeveloperPlugin)
+            project.plugins.apply(MavenManifestPlugin)
+            project.plugins.apply(MavenScmPlugin)
             project.plugins.apply(JavadocJarPlugin)
             project.plugins.apply(SourceJarPlugin)
 

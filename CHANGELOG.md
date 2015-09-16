@@ -1,7 +1,9 @@
-3.0.0 / 2015-09-11
+3.0.0 / 2015-09-15
 ==================
 
-* Move to gradle 2.6
+* Move to gradle 2.7
+* Move to 4.2.0 of nebula-publishing-plugin
+* Move to 3.x of other nebula plugins
 
 2.2.3 / 2015-02-06
 ==================
