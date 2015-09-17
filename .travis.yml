@@ -1,7 +1,8 @@
-language: java
+language: android
 sudo: false
-jdk:
-- oraclejdk7
+android:
+  components:
+    - build-tools-20.0.0
 install: "./installViaTravis.sh"
 script: "./buildViaTravis.sh"
 cache:

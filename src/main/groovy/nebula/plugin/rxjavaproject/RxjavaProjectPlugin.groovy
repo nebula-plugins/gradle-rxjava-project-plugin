@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Netflix, Inc.
+ * Copyright 2014-2015 Netflix, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,24 @@
  */
 package nebula.plugin.rxjavaproject
 
-import com.jfrog.bintray.gradle.BintrayUploadTask
 import nebula.core.GradleHelper
+import nebula.core.ProjectType
 import nebula.plugin.contacts.ContactsPlugin
 import nebula.plugin.dependencylock.DependencyLockPlugin
 import nebula.plugin.info.InfoPlugin
 import nebula.plugin.override.NebulaOverridePlugin
-import nebula.plugin.publishing.NebulaJavadocJarPlugin
-import nebula.plugin.publishing.NebulaPublishingPlugin
-import nebula.plugin.publishing.NebulaSourceJarPlugin
-import nebula.plugin.publishing.sign.NebulaSignPlugin
-import nebula.plugin.responsible.FixJavaPlugin
+import nebula.plugin.publishing.maven.MavenDeveloperPlugin
+import nebula.plugin.publishing.maven.MavenManifestPlugin
+import nebula.plugin.publishing.maven.MavenResolvedDependenciesJarPlugin
+import nebula.plugin.publishing.maven.MavenResolvedDependenciesPlugin
+import nebula.plugin.publishing.maven.MavenScmPlugin
+import nebula.plugin.publishing.publications.JavadocJarPlugin
+import nebula.plugin.publishing.maven.MavenPublishPlugin
+import nebula.plugin.publishing.publications.SourceJarPlugin
 import nebula.plugin.responsible.NebulaFacetPlugin
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.internal.project.AbstractProject
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginConvention
@@ -54,8 +56,6 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             // Repositories
             project.repositories.jcenter()
 
-            project.plugins.apply(FixJavaPlugin)
-
             // Contacts
             ContactsPlugin contactsPlugin = project.plugins.apply(ContactsPlugin)
             project.contacts {
@@ -70,7 +70,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply IdeaPlugin
 
             // Default Group
-            def gradleHelper = new GradleHelper((AbstractProject) project)
+            def gradleHelper = new GradleHelper(project)
             gradleHelper.addDefaultGroup('io.reactivex')
 
             // Default description, a user would just specify it after applying our plugin
@@ -101,15 +101,14 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
         if (projectType.isLeafProject) {
             project.plugins.apply(JavaBasePlugin)
-            // TODO Make this conditional
-            //project.plugins.apply(JavaPlugin)
 
             // Publishing
-            project.plugins.apply(NebulaPublishingPlugin)
-            //project.plugins.apply(NebulaSignPlugin)
-            project.plugins.apply(NebulaJavadocJarPlugin)
-            project.plugins.apply(NebulaSourceJarPlugin)
-            //project.plugins.apply(NebulaTestJarPlugin) // Projects should add this themselves if they want it.
+            project.plugins.apply(MavenResolvedDependenciesJarPlugin)
+            project.plugins.apply(MavenDeveloperPlugin)
+            project.plugins.apply(MavenManifestPlugin)
+            project.plugins.apply(MavenScmPlugin)
+            project.plugins.apply(JavadocJarPlugin)
+            project.plugins.apply(SourceJarPlugin)
 
             // Contacts
             project.plugins.apply(ContactsPlugin) // will inherit from parent projects
@@ -134,7 +133,6 @@ class RxjavaProjectPlugin implements Plugin<Project> {
 
                 JavaPluginConvention convention = project.convention.getPlugin(JavaPluginConvention)
                 convention.sourceCompatibility = JavaVersion.VERSION_1_6
-                //convention.targetCompatibility = JavaVersion.VERSION_1_6
             }
 
             // TODO Publish javadoc back to Github for hosting

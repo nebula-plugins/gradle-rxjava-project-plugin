@@ -1,10 +1,24 @@
+/*
+ * Copyright 2014-2015 Netflix, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * <http://www.apache.org/licenses/LICENSE-2.0>
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nebula.plugin.rxjavaproject
 
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.BintrayUploadTask
 import nebula.plugin.bintray.BintrayPlugin
 import nebula.plugin.info.scm.ScmInfoExtension
-import nebula.plugin.publishing.sign.NebulaSignPlugin
 import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -29,11 +43,8 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
         project.tasks.withType(Upload, disable)
         project.tasks.withType(BuildInfoBaseTask, disable)
 
-        project.plugins.apply(BintrayPlugin) // I wish, we would break this apart below so that we can customize it.
+        project.plugins.apply(BintrayPlugin)
         project.plugins.apply(PublishingPlugin)
-
-        project.tasks.getByName('verifyReleaseStatus').actions.clear()
-        project.tasks.getByName('verifySnapshotStatus').actions.clear()
 
         // Configuring for us
         BintrayExtension bintray = project.extensions.getByType(BintrayExtension)
@@ -71,12 +82,6 @@ class RxJavaPublishingPlugin  implements Plugin<Project> {
                 }
             }
         })
-
-        project.plugins.withType(NebulaSignPlugin) {
-            project.tasks.getByName('bintrayUpload').dependsOn('preparePublish')
-            project.tasks.getByName('artifactoryPublish').dependsOn('preparePublish')
-        }
-
     }
 
     static GIT_PATTERN = /((git|ssh|https?):(\/\/))?(\w+@)?([\w\.]+)([\:\\/])([\w\.@\:\/\-~]+)(\.git)(\/)?/
