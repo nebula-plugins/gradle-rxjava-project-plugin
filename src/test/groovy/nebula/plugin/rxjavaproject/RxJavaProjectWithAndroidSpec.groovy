@@ -43,13 +43,13 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
 
             android {
                 compileSdkVersion 20
-                buildToolsVersion "20"
+                buildToolsVersion '20'
 
                 defaultConfig {
                     minSdkVersion 14
                     targetSdkVersion 20
                     versionCode 1
-                    versionName "1.0"
+                    versionName '1.0'
                 }
                 buildTypes {
                     release {
