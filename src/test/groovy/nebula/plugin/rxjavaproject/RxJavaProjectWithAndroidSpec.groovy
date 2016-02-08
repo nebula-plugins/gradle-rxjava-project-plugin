@@ -30,7 +30,7 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
             buildscript {
                 repositories { jcenter() }
                 dependencies {
-                    classpath 'com.android.tools.build:gradle:1.+'
+                    classpath 'com.android.tools.build:gradle:2.+'
                 }
             }
 
@@ -42,12 +42,12 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
             apply plugin: 'com.android.application'
 
             android {
-                compileSdkVersion 20
-                buildToolsVersion '20'
+                compileSdkVersion 23
+                buildToolsVersion '23.0.2'
 
                 defaultConfig {
                     minSdkVersion 14
-                    targetSdkVersion 20
+                    targetSdkVersion 23
                     versionCode 1
                     versionName '1.0'
                 }
@@ -58,12 +58,45 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
                 }
             }
         """.stripIndent()
+
+        file("src/main/AndroidManifest.xml") << """\
+        <?xml version="1.0" encoding="UTF-8"?>
+        <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+            package="com.example.android.basiccontactables"
+            android:versionCode="1"
+            android:versionName="1.0" >
+
+            <uses-permission android:name="android.permission.READ_CONTACTS"/>
+            <!-- Min/target SDK versions (<uses-sdk>) managed by build.gradle -->
+            <permission android:name="android"></permission>
+
+            <application
+                android:allowBackup="true"
+                android:icon="@drawable/ic_launcher"
+                android:label="@string/app_name"
+                android:theme="@style/Theme.Sample" >
+                <activity
+                    android:name="com.example.android.basiccontactables.MainActivity"
+                    android:label="@string/app_name"
+                    android:launchMode="singleTop">
+                    <meta-data
+                        android:name="android.app.searchable"
+                        android:resource="@xml/searchable" />
+                    <intent-filter>
+                        <action android:name="android.intent.action.SEARCH" />
+                    </intent-filter>
+                    <intent-filter>
+                        <action android:name="android.intent.action.MAIN" />
+                        <category android:name="android.intent.category.LAUNCHER" />
+                    </intent-filter>
+                </activity>
+            </application>
+        </manifest>
+        """.stripIndent()
     }
 
     def 'android plugin can be applied'() {
-
         expect:
         runTasksSuccessfully('androidDependencies')
-
     }
 }
