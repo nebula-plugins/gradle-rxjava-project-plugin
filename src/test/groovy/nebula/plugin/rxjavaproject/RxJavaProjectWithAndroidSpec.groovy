@@ -42,12 +42,12 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
             apply plugin: 'com.android.application'
 
             android {
-                compileSdkVersion 23
-                buildToolsVersion '23.0.2'
+                compileSdkVersion 20
+                buildToolsVersion '20'
 
                 defaultConfig {
                     minSdkVersion 14
-                    targetSdkVersion 23
+                    targetSdkVersion 20
                     versionCode 1
                     versionName '1.0'
                 }
