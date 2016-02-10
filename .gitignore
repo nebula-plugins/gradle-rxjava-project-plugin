@@ -3,3 +3,4 @@ build/
 .idea/
 *.ipr
 *.iml
+gradle.properties
