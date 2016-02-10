@@ -23,7 +23,6 @@ import nebula.plugin.info.InfoPlugin
 import nebula.plugin.override.NebulaOverridePlugin
 import nebula.plugin.publishing.maven.MavenDeveloperPlugin
 import nebula.plugin.publishing.maven.MavenManifestPlugin
-import nebula.plugin.publishing.maven.MavenResolvedDependenciesJarPlugin
 import nebula.plugin.publishing.maven.MavenResolvedDependenciesPlugin
 import nebula.plugin.publishing.maven.MavenScmPlugin
 import nebula.plugin.publishing.publications.JavadocJarPlugin
@@ -103,7 +102,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply(JavaBasePlugin)
 
             // Publishing
-            project.plugins.apply(MavenResolvedDependenciesJarPlugin)
+            project.plugins.apply(MavenResolvedDependenciesPlugin)
             project.plugins.apply(MavenDeveloperPlugin)
             project.plugins.apply(MavenManifestPlugin)
             project.plugins.apply(MavenScmPlugin)
