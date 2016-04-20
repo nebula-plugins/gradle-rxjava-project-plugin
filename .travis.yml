@@ -4,7 +4,7 @@ android:
   components:
     - build-tools-20.0.0
 install: true
-script: "./buildViaTravis.sh"
+script: "./gradle/buildViaTravis.sh"
 cache:
   directories:
   - "$HOME/.gradle/caches/"
