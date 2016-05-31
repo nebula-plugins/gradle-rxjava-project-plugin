@@ -34,23 +34,19 @@ contacts {
 }
 
 dependencies {
-    compile 'com.netflix.nebula:nebula-core:3.+'
-    compile 'com.netflix.nebula:nebula-project-plugin:3.+'
-    compile 'com.netflix.nebula:nebula-bintray-plugin:3.+' // for publishing
-    compile 'com.netflix.nebula:nebula-release-plugin:3.+' // for releasing
-    compile 'com.netflix.nebula:gradle-override-plugin:2.+'
-    compile 'com.netflix.nebula:nebula-publishing-plugin:4.+' // for publishing
-    compile 'com.github.jengelman.gradle.plugins:shadow:1.+'
-    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:0.+'
-    compile 'com.google.guava:guava:17.0' // For ClasspathHelper
+    compile 'com.netflix.nebula:nebula-core:latest.release'
+    compile 'com.netflix.nebula:nebula-project-plugin:latest.release'
+    compile 'com.netflix.nebula:nebula-bintray-plugin:latest.release'
+    compile 'com.netflix.nebula:nebula-release-plugin:latest.release'
+    compile 'com.netflix.nebula:gradle-override-plugin:latest.release'
+    compile 'com.netflix.nebula:nebula-publishing-plugin:latest.release'
+    compile 'com.github.jengelman.gradle.plugins:shadow:latest.release'
+    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:latest.release'
+    compile 'com.google.guava:guava:latest.release'
 
-    testCompile('com.netflix.nebula:nebula-test:4.+') {
+    testCompile('com.netflix.nebula:nebula-test:latest.release') {
         exclude group: "org.codehaus.groovy", module: "groovy-all"
     }
-}
-
-test {
-    maxHeapSize = '512m'
 }
 
 pluginBundle {
