@@ -30,7 +30,7 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
             buildscript {
                 repositories { jcenter() }
                 dependencies {
-                    classpath 'com.android.tools.build:gradle:2.+'
+                    classpath 'com.android.tools.build:gradle:2.0.0'
                 }
             }
 
