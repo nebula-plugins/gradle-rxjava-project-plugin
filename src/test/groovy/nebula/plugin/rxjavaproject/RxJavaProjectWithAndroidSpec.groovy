@@ -96,7 +96,10 @@ class RxJavaProjectWithAndroidSpec extends IntegrationSpec {
     }
 
     def 'android plugin can be applied'() {
-        expect:
-        runTasksSuccessfully('androidDependencies')
+        when:
+        def result = runTasksSuccessfully('dependencies')
+
+        then:
+        result.standardOutput.contains('android')
     }
 }
