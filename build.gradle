@@ -34,15 +34,15 @@ contacts {
 }
 
 dependencies {
-    compile 'com.netflix.nebula:nebula-core:latest.release'
-    compile 'com.netflix.nebula:nebula-project-plugin:latest.release'
-    compile 'com.netflix.nebula:nebula-bintray-plugin:latest.release'
-    compile 'com.netflix.nebula:nebula-release-plugin:latest.release'
-    compile 'com.netflix.nebula:gradle-override-plugin:latest.release'
-    compile 'com.netflix.nebula:nebula-publishing-plugin:latest.release'
-    compile 'com.github.jengelman.gradle.plugins:shadow:latest.release'
-    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:latest.release'
-    compile 'com.google.guava:guava:latest.release'
+    compile 'com.netflix.nebula:nebula-core:4.0.1'
+    compile 'com.netflix.nebula:nebula-project-plugin:3.1.0'
+    compile 'com.netflix.nebula:nebula-bintray-plugin:3.4.0'
+    compile 'com.netflix.nebula:nebula-release-plugin:4.0.1'
+    compile 'com.netflix.nebula:gradle-override-plugin:3.0.2'
+    compile 'com.netflix.nebula:nebula-publishing-plugin:4.7.0'
+    compile 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+    compile 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+    compile 'com.google.guava:guava:19.0'
 
     testCompile('com.netflix.nebula:nebula-test:latest.release') {
         exclude group: "org.codehaus.groovy", module: "groovy-all"
