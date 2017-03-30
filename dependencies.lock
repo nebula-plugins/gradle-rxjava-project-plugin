@@ -147,7 +147,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -189,7 +189,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -231,7 +231,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -273,7 +273,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -401,7 +401,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -443,7 +443,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -485,7 +485,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
@@ -527,7 +527,7 @@
             "requested": "latest.release"
         },
         "com.netflix.nebula:nebula-test": {
-            "locked": "5.0.1",
+            "locked": "6.0.0",
             "requested": "latest.release"
         },
         "nl.javadude.gradle.plugins:license-gradle-plugin": {
