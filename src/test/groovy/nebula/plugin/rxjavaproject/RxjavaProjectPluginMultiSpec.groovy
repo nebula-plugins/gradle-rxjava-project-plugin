@@ -63,6 +63,10 @@ class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
     }
 
     def 'stand it all up'() {
+        setup:
+        // Shadow plugin is using SimpleWorkResult and is deprecated in 4.2
+        System.setProperty('ignoreDeprecations', 'true')
+
         when:
         def result = runTasksSuccessfully('build')
 
@@ -70,5 +74,8 @@ class RxjavaProjectPluginMultiSpec extends RxJavaIntegrationSpec {
         //new File(projectDir)
         fileExists("SubA/build/libs/SubA-${snapshotVer}.jar")
         fileExists("SubB/build/libs/SubB-${snapshotVer}.jar")
+
+        cleanup:
+        System.clearProperty('ignoreDeprecations')
     }
 }
