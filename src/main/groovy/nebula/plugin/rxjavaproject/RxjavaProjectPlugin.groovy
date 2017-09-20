@@ -29,6 +29,7 @@ import nebula.plugin.publishing.publications.JavadocJarPlugin
 import nebula.plugin.publishing.maven.MavenPublishPlugin
 import nebula.plugin.publishing.publications.SourceJarPlugin
 import nebula.plugin.responsible.NebulaFacetPlugin
+import org.apache.commons.lang3.reflect.FieldUtils
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -69,8 +70,7 @@ class RxjavaProjectPlugin implements Plugin<Project> {
             project.plugins.apply IdeaPlugin
 
             // Default Group
-            def gradleHelper = new GradleHelper(project)
-            gradleHelper.addDefaultGroup('io.reactivex')
+            addDefaultGroup('io.reactivex')
 
             // Default description, a user would just specify it after applying our plugin
             project.description = project.name
@@ -165,5 +165,20 @@ class RxjavaProjectPlugin implements Plugin<Project> {
                 testTask.testLogging.displayGranularity = 2
             }
         }
+    }
+
+    /**
+     * Dig deeper into project object to see if group has been set. Wrap in beforeEvaluate if want to run later.
+     * @param defaultGroup
+     */
+    def addDefaultGroup(String defaultGroup) {
+        // Getting on AbstractProject will always feed out some group name if we're not at the root project, so look
+        // past it's getGroup() method to see what's really set
+        def directGroupName = FieldUtils.readField(project, 'group', true)
+        if (!directGroupName) {
+            project.logger.debug("Defaulting group to '${defaultGroup}', because direct group name ('${directGroupName}') is empty")
+            project.group = defaultGroup
+        }
+        project.logger.info("Using group of ${project.group}")
     }
 }

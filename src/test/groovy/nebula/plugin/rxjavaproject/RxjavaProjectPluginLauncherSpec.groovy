@@ -70,7 +70,7 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         def result = runTasksSuccessfully('build', 'publishNebulaPublicationToTestRepository')
 
         then:
-        fileExists('build/classes/main/reactivex/HelloWorld.class')
+        fileExists('build/classes/java/main/reactivex/HelloWorld.class')
         // 0.1.0-dev.1.uncommitted+59d316c
         def snapshotVer = "0.1.0-SNAPSHOT"
         fileExists("build/libs/stand-it-all-up-${snapshotVer}-javadoc.jar")
@@ -81,10 +81,10 @@ class RxjavaProjectPluginLauncherSpec extends IntegrationSpec {
         manifest['Module-Email'] == 'benjchristensen@netflix.com'
 
         result.wasExecuted(':compileExamplesJava')
-        fileExists('build/classes/examples/Example.class')
+        fileExists('build/classes/java/examples/Example.class')
 
         result.wasExecuted(':compilePerfJava')
-        fileExists('build/classes/perf/Perf.class')
+        fileExists('build/classes/java/perf/Perf.class')
         fileExists("build/libs/stand-it-all-up-${snapshotVer}-benchmarks.jar")
 
         result.wasExecuted(':javadoc')

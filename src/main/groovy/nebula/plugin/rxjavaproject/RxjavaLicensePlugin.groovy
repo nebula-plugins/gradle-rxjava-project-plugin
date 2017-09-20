@@ -15,6 +15,7 @@
  */
 package nebula.plugin.rxjavaproject
 
+import com.google.common.io.Files
 import nebula.core.GradleHelper
 import nebula.plugin.publishing.maven.license.MavenApacheLicensePlugin
 import nebula.plugin.responsible.FacetDefinition
@@ -52,7 +53,7 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
         // Limit to just main sourceSet
         project.plugins.withType(JavaPlugin) {
             // This is actually too late, because of a bug in the license plugin
-            licenseExtension.sourceSets = [project.sourceSets.main]
+            licenseExtension.sourceSets.add(project.sourceSets.main)
         }
 
         // Hack to work around above bug
@@ -80,7 +81,7 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
     }
 
     File defineHeaderFile() {
-        File tmpDir = new GradleHelper(project).getTempDir('license')
+        File tmpDir = getTempDir('license')
         File to = new File(tmpDir, 'HEADER')
         return to
     }
@@ -91,5 +92,12 @@ class RxjavaLicensePlugin  implements Plugin<Project> {
                 out << input
             }
         }
+    }
+
+    def getTempDir(String taskBaseName) {
+        File tmpDir = new File(project.getBuildDir(), taskBaseName)
+        Files.createParentDirs(tmpDir);
+        tmpDir.mkdirs()
+        return tmpDir
     }
 }
