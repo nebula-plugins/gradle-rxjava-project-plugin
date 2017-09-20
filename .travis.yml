@@ -1,8 +1,5 @@
 language: android
 sudo: false
-android:
-  components:
-    - build-tools-25.0.2
 install:
   - echo y | android update sdk -u -a -t build-tools-25.0.2
   - echo y | android update sdk -u -a -t android-25
