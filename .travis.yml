@@ -3,7 +3,9 @@ sudo: false
 android:
   components:
     - build-tools-20.0.0
-install: true
+install:
+  - echo y | android update sdk -u -a -t build-tools-20.0.0
+  - echo y | android update sdk -u -a -t android-20
 script: "./gradle/buildViaTravis.sh"
 cache:
   directories:
